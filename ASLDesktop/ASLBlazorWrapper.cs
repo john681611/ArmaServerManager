@@ -12,7 +12,7 @@ namespace ASL.GUI.Desktop
         {
             InitializeComponent();
 
-            Text = $"ASL {ASL.Lib.Core.VERSION} for DCS World";
+            Text = $"ASL {ASL.Lib.ASLCore.VERSION} for DCS World";
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
