@@ -38,6 +38,7 @@ namespace ASL.Lib
         public ASLCore()
         {
             Config = LoadConfig();
+            Config.FindMods();
         }
 
         private Config LoadConfig()

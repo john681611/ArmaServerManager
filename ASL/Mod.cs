@@ -4,5 +4,6 @@ namespace ASL.Lib
         public string Path {get; set;}
         public bool ServerSide {get; set;}
         public string SteamId {get; set;}
+
     }
 }

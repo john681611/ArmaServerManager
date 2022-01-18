@@ -1,15 +1,6 @@
 {
-    "Mods": {
-        "ACE": {
-            "path": "/ACE",
-            "steamID": 154818
-        },
-        "CBA": {
-            "path": "/CBA",
-            "steamID": 154818
-        }
-    },
     "ServerPath": "C:\\GameServers\\Arma_3_Server",
+    "ModsPath": "D:\\Steam\\steamapps\\common\\Arma 3\\!Workshop",
     "ConfigPath": "",
     "NetworkConfig": "",
     "BattleEyePath": "",
