@@ -56,7 +56,7 @@ namespace ASL.Lib
             string tempFilename = Path.ChangeExtension(Path.GetTempFileName(), ".bat");
             using (StreamWriter writer = new StreamWriter(tempFilename))
             {
-                writer.WriteLine($"start {Config.ServerExe} -mod={modsString} -serverMod={modsServerString} -config={Config.ConfigPath} -bepath={Config.BattleEyePath} -cfg={Config.NetworkConfig} {Config.ExtraArgs}");
+                writer.WriteLine($"start {Config.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={Config.ConfigPath} -bepath={Config.BattleEyePath} -cfg={Config.NetworkConfig} {Config.ExtraArgs}");
                 writer.WriteLine("exit");
             }
             Process process = Process.Start(tempFilename);
@@ -71,7 +71,7 @@ namespace ASL.Lib
             {
                 foreach (var mod in mods)
                 {
-                    writer.WriteLine($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerExe}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {Config.ServerBranch}\" {mod.SteamId} validate +quit");
+                    writer.WriteLine($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {Config.ServerBranch}\" {mod.SteamId} validate +quit");
                 }
                 writer.WriteLine("exit");
             }
@@ -86,7 +86,7 @@ namespace ASL.Lib
             using (StreamWriter writer = new StreamWriter(tempFilename))
             {
 
-                writer.WriteLine($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerExe}\" +login {Config.SteamLogin}  +\"app_update {Config.ServerBranch}\" validate +quit");
+                writer.WriteLine($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerPath}\" +login {Config.SteamLogin}  +\"app_update {Config.ServerBranch}\" validate +quit");
                 writer.WriteLine("exit");
             }
             Process process = Process.Start(tempFilename);

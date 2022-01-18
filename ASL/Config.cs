@@ -4,7 +4,7 @@ namespace ASL.Lib
 {
     public class Config {
         public Dictionary<string, Mod> Mods {get; set;}
-        public string ServerExe {get; set;}
+        public string ServerPath {get; set;}
         public string ConfigPath {get; set;}
         public string NetworkConfig {get; set;}
         public string BattleEyePath {get; set;}
