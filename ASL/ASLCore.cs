@@ -32,13 +32,14 @@ namespace ASL.Lib
     {
         public const string VERSION = "0.0.1";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
-        public Config Config {get; private set;}
+        public Config Config { get; private set; }
 
         public const string BUILD_VERSION = "~BUILD_VERSION~";
         public ASLCore()
         {
             Config = LoadConfig();
             Config.FindMods();
+            Config.FindMissions();
         }
 
         private Config LoadConfig()
@@ -52,8 +53,8 @@ namespace ASL.Lib
 
         public void RunServer(List<Mod> mods)
         {
-            string modsString = string.Join(";", mods.Where(x => !x.ServerSide ).Select(x => x.Path));
-             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide ).Select(x => x.Path));
+            string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
+            string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
             string tempFilename = Path.ChangeExtension(Path.GetTempFileName(), ".bat");
             using (StreamWriter writer = new StreamWriter(tempFilename))
             {

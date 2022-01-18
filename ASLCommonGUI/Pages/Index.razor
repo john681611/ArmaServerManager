@@ -4,6 +4,17 @@
 @using ASL.Lib
 
 <div>
+    <label>Template Name</label>
+    <input class="form-control" @bind="templateName" />
+    <TemplateButtons />
+    <label>Starting Mission (Non functional)</label>
+    <select class="form-control selectpicker" @bind="selectedMission">
+        <option value=>No mission (use provided config)</option>
+        @foreach (var mission in ASL.Config.Missions)
+        {
+            <option value=@mission>@mission</option>
+        }
+    </select>
     <button class="btn btn-primary form-control" @onclick='() => ASL.RunServer(selectedMods)'>Start Server</button>
     <button class="btn btn-secondary form-control" @onclick='() => ASL.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
     <button class="btn btn-warn form-control" @onclick='() => ASL.RunSteamServerUpdate()'>Run Server Update </button>
@@ -16,7 +27,10 @@
 
 @code {
     private ASLCore ASL;
+
+    private string templateName;
     private List<Mod> selectedMods;
+    private string selectedMission;
     protected override void OnInitialized()
     {
         ASL = new ASLCore();
