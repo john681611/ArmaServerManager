@@ -1,0 +1,33 @@
+@page "/"
+
+
+@using ASL.Lib
+
+<div>
+    <button class="btn btn-primary form-control" @onclick='() => ASL.RunServer(selectedMods)'>Start Server</button>
+    <button class="btn btn-secondary form-control" @onclick='() => ASL.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
+    <button class="btn btn-warn form-control" @onclick='() => ASL.RunSteamServerUpdate()'>Run Server Update </button>
+    <CheckBoxList
+        Data="ASL.Config.Mods"
+        SelectedValues="selectedMods"
+        TItem="Mod">
+    </CheckBoxList>
+</div>
+
+@code {
+    private ASLCore ASL;
+    private List<Mod> selectedMods;
+    protected override void OnInitialized()
+    {
+        ASL = new ASLCore();
+        selectedMods = new List<Mod>();  
+    }
+
+    private void ToggleMod(Mod mod)
+    {
+        if(selectedMods.Contains(mod))
+            selectedMods.Remove(mod);
+        else
+            selectedMods.Add(mod);
+    }
+}

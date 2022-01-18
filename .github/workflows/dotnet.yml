@@ -1,0 +1,73 @@
+name: .NET
+
+on:
+  push:
+    branches: [ beta-release ]
+ 
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+ 
+    steps:
+    - name: Set git to use LF
+      run: |
+          git config --global core.autocrlf false
+          git config --global core.eol crlf
+    - uses: actions/checkout@v1
+      name: Checkout Code
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore NuGet Packages
+      run: dotnet restore ASL.sln
+
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+        format: YYMMDD-HHMM
+        utcOffset: "+00:00"
+
+    - name: Set Build Version
+      id: build_version
+      run: |
+        (Get-Content -path  ASL\ASLCore.cs -Raw) -replace '~BUILD_VERSION~','${{ steps.current-time.outputs.formattedTime }}' | Set-Content ASL\ASLCore.cs
+ 
+    - name: Build and Publish App
+      run: dotnet publish ASL.sln -o Release -c Release
+
+    - name: Get previous version
+      id: previous_version
+      run: |
+        echo "::set-output name=version_tag::$(git describe  --abbrev=0 HEAD --tags)"
+
+    - name: Create Changelog
+      id: change_log
+      shell: bash
+      run: |
+        LOGS=$(git log --pretty=oneline HEAD...${{ steps.previous_version.outputs.version_tag}})
+        LOGS="${LOGS//'%'/'%25'}"
+        LOGS="${LOGS//$'\n'/'%0A'}"
+        LOGS="${LOGS//$'\r'/'%0D'}"
+        echo "::set-output name=log::$LOGS"
+
+    
+      
+    - name: Zip Release
+      run: 7z a -tzip beta-release-${{ steps.current-time.outputs.formattedTime }}.zip Release "-xr!.git\" "-xr!.github\" "-xr!.git*" "-xr!.vscode\" "-xr!dataExtractors\"  "-xr!Source\" "-xr!docs\" "-x!*.bat" "-x!*.filelist" 
+
+
+    - name: Upload Release
+      uses: ncipollo/release-action@v1
+      with:
+          tag: "beta-release-${{ steps.current-time.outputs.formattedTime }}"
+          name: "beta-release-${{ steps.current-time.outputs.formattedTime }}"
+          body: |
+            This is a automated beta build. This may not work. Its not recommend to overwrite a official release with this.
+            ${{ steps.change_log.outputs.log }}
+          prerelease: true
+          artifacts: "beta-release-${{ steps.current-time.outputs.formattedTime }}.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
