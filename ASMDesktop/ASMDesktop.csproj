@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>ASM.GUI.Desktop</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="6.0.101-preview.10.2068" />
+    <ProjectReference Include="../ASMCommonGUI/ASMCommonGUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\**" LinkBase="Resources" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\config.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+</Project>

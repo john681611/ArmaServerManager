@@ -1,0 +1,47 @@
+@page "/"
+
+
+@using ASM.Lib
+
+<div>
+    <label>Template Name</label>
+    <input class="form-control" @bind="templateName" />
+    <TemplateButtons />
+    <label>Starting Mission (Non functional)</label>
+    <select class="form-control selectpicker" @bind="selectedMission">
+        <option value=>No mission (use provided config)</option>
+        @foreach (var mission in ASM.Config.Missions)
+        {
+            <option value=@mission>@mission</option>
+        }
+    </select>
+    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods)'>Start Server</button>
+    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
+    <button class="btn btn-warn form-control" @onclick='() => ASM.RunSteamServerUpdate()'>Run Server Update </button>
+    <CheckBoxList
+        Data="ASM.Config.Mods"
+        SelectedValues="selectedMods"
+        TItem="Mod">
+    </CheckBoxList>
+</div>
+
+@code {
+    private ASMCore ASM;
+
+    private string templateName;
+    private List<Mod> selectedMods;
+    private string selectedMission;
+    protected override void OnInitialized()
+    {
+        ASM = new ASMCore();
+        selectedMods = new List<Mod>();  
+    }
+
+    private void ToggleMod(Mod mod)
+    {
+        if(selectedMods.Contains(mod))
+            selectedMods.Remove(mod);
+        else
+            selectedMods.Add(mod);
+    }
+}

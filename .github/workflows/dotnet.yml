@@ -22,7 +22,7 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Restore NuGet Packages
-      run: dotnet restore ASL.sln
+      run: dotnet restore ASM.sln
 
     - name: Get current time
       uses: 1466587594/get-current-time@v2
@@ -34,10 +34,10 @@ jobs:
     - name: Set Build Version
       id: build_version
       run: |
-        (Get-Content -path  ASL\ASLCore.cs -Raw) -replace '~BUILD_VERSION~','${{ steps.current-time.outputs.formattedTime }}' | Set-Content ASL\ASLCore.cs
+        (Get-Content -path  ASM\ASMCore.cs -Raw) -replace '~BUILD_VERSION~','${{ steps.current-time.outputs.formattedTime }}' | Set-Content ASM\ASMCore.cs
  
     - name: Build and Publish App
-      run: dotnet publish ASL.sln -o Release -c Release
+      run: dotnet publish ASM.sln -o Release -c Release
 
     - name: Get previous version
       id: previous_version
