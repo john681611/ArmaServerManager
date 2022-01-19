@@ -1,0 +1,15 @@
+{
+  "Mods": {},
+  "Missions": [],
+  "MissionsPath": "",
+  "ServerPath": "",
+  "ModsPath": "",
+  "ConfigPath": "",
+  "NetworkConfig": "",
+  "BattleEyePath": "",
+  "ExtraArgs": "-port=2302 -profiles=Server -name=Server -filePatching -enableHT -loadMissionToMemory -hugepages -limitFPS=62",
+  "SteamPath": "",
+  "SteamLogin": "",
+  "ServerBranch": "",
+  "Templates": {}
+}

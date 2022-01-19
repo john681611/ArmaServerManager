@@ -7,20 +7,16 @@
 }
 
 .darkMode .main {
-    background-color: #020A10;
+    background-color: #101002;
     color: white;
 }
 
 .darkMode .main .top-row, .darkMode .sidebar .top-row {
-    background-color: #0a263f;
+    background-color: #4f500c;
     color: white;
     border-color: black;
 }
 
-.darkMode .form-control {
-    background-color: transparent;
-    color: white;
-}
 
 .darkMode .nav-link.active {
     background-color: transparent;

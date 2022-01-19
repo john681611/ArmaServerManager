@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ASM.Lib
 {
-    public class Config
+    public class ASMConfig
     {
         public Dictionary<string, Mod> Mods { get; set; }
         public List<string> Missions { get; set; }
@@ -21,6 +22,8 @@ namespace ASM.Lib
         public string SteamLogin { get; set; }
         public string ServerBranch { get; set; }
 
+        public Dictionary<string,Template> Templates {get; set;}
+
         internal void FindMissions()
         {
             if (string.IsNullOrEmpty(MissionsPath))
@@ -31,9 +34,29 @@ namespace ASM.Lib
             .Select(x => x.Name).ToList();
         }
 
+        public static ASMConfig Load(string path = "")
+        {
+             if (string.IsNullOrEmpty(path))
+                path = AppDomain.CurrentDomain.BaseDirectory;
+            path = Path.GetFullPath(path);
+            DirectoryInfo di = new DirectoryInfo(path);
+            if (!di.GetFiles().Any(x => x.Name == "ASMconfig.json"))
+                return Load(path + "/..");
+            using (StreamReader r = new StreamReader(path + "/ASMconfig.json"))
+            {
+                string json = r.ReadToEnd();
+                return JsonConvert.DeserializeObject<ASMConfig>(json);
+            }
+        }
+
+        public void Save()
+        {
+            var json = JsonConvert.SerializeObject(this, formatting: Formatting.Indented);
+            File.WriteAllText("../config.json", json);
+        }
+
         internal void FindMods()
         {
-            Mods = new Dictionary<string, Mod>();
             if (string.IsNullOrEmpty(ModsPath))
                 throw new Exception("NO MODS PATH");
             DirectoryInfo di = new DirectoryInfo(ModsPath);
@@ -53,12 +76,24 @@ namespace ASM.Lib
             foreach (var folder in modFolders)
             {
                 var metaData = GetCPPFile(folder.GetFiles().First(x => x.Name == "meta.cpp").FullName);
+                if(Mods.ContainsKey(metaData["name"]))
+                    continue;
                 Mods.Add(metaData["name"], new Mod
                 {
                     Path = folder.FullName,
                     SteamId = metaData["publishedid"]
                 });
             }
+        }
+
+        public void ToggleServerSide(List<string> modIds)
+        {
+            var mods = Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
+            foreach (var mod in mods)
+            {
+              mod.ServerSide = !mod.ServerSide;  
+            }
+            Save();
         }
 
         private Dictionary<string, string> GetCPPFile(string path)

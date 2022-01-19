@@ -1,4 +1,4 @@
-@typeparam TItem
+@using Lib
 <div style=@Style class="checkboxList">
     @if (Data != null)
     {
@@ -7,13 +7,13 @@
             var key = item.Key;
             var value = item.Value;
             bool Checked = false;
-            if (SelectedValues.Contains(value))
+            if (SelectedValues.Contains(key))
             {
                 Checked = true;
             }
-            <label class="checkboxList-item">
+            <label class="checkboxList-item @((value.ServerSide? "serverSide" : ""))">
                 <input type="checkbox" checked=@Checked
-            @onchange="eventArgs => { CheckboxClicked(value, eventArgs.Value); }" />
+            @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }" />
                 <span>
                     @key
                 </span>
@@ -25,17 +25,17 @@
 
 @code {
     //Data for the Checkbox
-    [Parameter] public Dictionary<string, TItem> Data { get; set; }
+    [Parameter] public Dictionary<string, Mod> Data { get; set; }
     // The field to be shown adjacent to checkbox
     // CSS Style for the Checkbox container
     [Parameter] public string Style { get; set; }
     // Any childd content for the control (if needed)
     [Parameter] public RenderFragment ChildContent { get; set; }
     // The array which contains the list of selected checkboxs
-    [Parameter] public List<TItem> SelectedValues { get; set; }
+    [Parameter] public List<string> SelectedValues { get; set; }
 
     //Method to update the selected value on click on checkbox
-    public void CheckboxClicked(TItem aSelectedId, object aChecked)
+    public void CheckboxClicked(string aSelectedId, object aChecked)
     {
         if ((bool)aChecked)
         {

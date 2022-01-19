@@ -1,47 +1,148 @@
 @page "/"
-
-
+@inherits LayoutComponentBase
 @using ASM.Lib
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<div>
-    <label>Template Name</label>
-    <input class="form-control" @bind="templateName" />
-    <TemplateButtons />
-    <label>Starting Mission (Non functional)</label>
-    <select class="form-control selectpicker" @bind="selectedMission">
-        <option value=>No mission (use provided config)</option>
-        @foreach (var mission in ASM.Config.Missions)
-        {
-            <option value=@mission>@mission</option>
-        }
-    </select>
-    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods)'>Start Server</button>
-    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
-    <button class="btn btn-warn form-control" @onclick='() => ASM.RunSteamServerUpdate()'>Run Server Update </button>
-    <CheckBoxList
-        Data="ASM.Config.Mods"
-        SelectedValues="selectedMods"
-        TItem="Mod">
-    </CheckBoxList>
+<div class="page darkMode">
+    <div class="sidebar">
+        <div class="top-row pl-4 navbar navbar-dark">
+            <a class="navbar-brand" href=""></a>
+                <button class="navbar-toggler" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+        </div>
+
+        <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+            <ul class="nav flex-column">
+                <li class="nav-item px-3">
+                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods)'>Start Server</button>
+                </li>
+                <li class="nav-item px-3">
+                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
+                </li>
+                <li class="nav-item px-3">
+                    <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate()'>Run Server Update</button>
+                </li>
+            </ul>
+        </div>
+        <div class="bottom-logo">
+            <img src="_content/ASMCommonGUI/img/ASM_white.png" alt="Briefing Room Logo" />
+            <span class="ver">@ASMCore.VERSION (@ASMCore.BUILD_VERSION) by <strong>John Harvey
+                    (@@john681611)</strong></span>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="@ASMCore.REPO_URL" target="_blank">GitHub</a>
+        </div>
+
+        <div class="content px-4">
+            <div>
+                <div class="generator-group flex-justify-spaced flex-margin-fix">
+                    <div class="form-group flex-block">
+                        <div class="input-group"> 
+                            <label>Name
+                                <input class="form-control" @bind="templateName" required />
+                            </label>
+                            <div class="form-group-prepend">
+                                <button class="btn btn-warning row-button" @onclick='() => SaveTemplate()'>Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group flex-block">
+                        <div class="input-group">
+                            <label>Stored
+                                <select class="form-control selectpicker" @bind="selectedTemplate">
+                                    <option value="">New Template</option>
+                                    @foreach (var template in ASM.Config.Templates)
+                                    {
+                                        <option value=@template.Key>@template.Key</option>
+                                    }
+                                </select>
+                            </label>
+                            <div class="form-group-prepend">
+                                <button class="btn btn-warning row-button" @onclick='() => LoadTemplate()'>Load</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <label>Starting Mission (Non functional)</label>
+                    <select class="form-control selectpicker" @bind="selectedMission">
+                    <option value=>No mission (use provided config)</option>
+                    @foreach (var mission in ASM.Config.Missions)
+                    {
+                    <option value=@mission>@mission</option>
+                    }
+                    </select> *@
+                
+                <CheckBoxModList Data="ASM.Config.Mods" SelectedValues="selectedMods"></CheckBoxModList>
+                <button class="btn btn-danger form-control"
+                    @onclick='() => ASM.Config.ToggleServerSide(selectedMods)'>Toggle ServerSide Mod</button>
+            </div>
+            @Body
+        </div>
+    </div>
 </div>
 
 @code {
+    //NAV  -----------------------------------------------------------------------------------
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+
+    // ASM -----------------------------------------------------------------------------------
+
     private ASMCore ASM;
 
     private string templateName;
-    private List<Mod> selectedMods;
+    private List<string> selectedMods;
     private string selectedMission;
+
+    private string selectedTemplate = "";
     protected override void OnInitialized()
     {
         ASM = new ASMCore();
-        selectedMods = new List<Mod>();  
+        selectedMods = new List<string>();
     }
 
-    private void ToggleMod(Mod mod)
+    private void ToggleMod(string modId)
     {
-        if(selectedMods.Contains(mod))
-            selectedMods.Remove(mod);
+        if (selectedMods.Contains(modId))
+            selectedMods.Remove(modId);
         else
-            selectedMods.Add(mod);
+            selectedMods.Add(modId);
+    }
+
+    private void SaveTemplate()
+    {
+        ASM.Config.Templates.Add(
+        templateName,
+        new Template
+        {
+            Mods = selectedMods
+        }
+        );
+        ASM.Config.Save();
+    }
+
+    private void LoadTemplate()
+    {
+        if (!ASM.Config.Templates.ContainsKey(selectedTemplate))
+        {
+            templateName = "";
+            selectedMods = new List<string>();
+            return;
+        }
+
+        var template = ASM.Config.Templates[selectedTemplate];
+        templateName = selectedTemplate;
+        selectedMods = template.Mods;
     }
 }

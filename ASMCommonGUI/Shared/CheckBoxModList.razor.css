@@ -49,5 +49,14 @@
     height: 0;
   }
 
+.serverSide > span {
+    border-color: crimson;
+}
+
+.serverSide > input:checked + span {
+    background-color: crimson;
+    border-color: crimson;
+}
+
 
 
