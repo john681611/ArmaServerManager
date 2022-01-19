@@ -39,7 +39,7 @@ namespace ASM.Lib
             RunBat(lines, logStream);
         }
 
-        private static void RunBat(List<string> lines, List<string> logStream)
+        private static async void RunBat(List<string> lines, List<string> logStream)
         {
             string tempFilename = Path.ChangeExtension(Path.GetTempFileName(), ".bat");
             using (StreamWriter writer = new StreamWriter(tempFilename))
@@ -54,12 +54,17 @@ namespace ASM.Lib
             Process process = new Process();
             process.StartInfo.FileName = tempFilename;
             process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => logStream.Add($"Error: {e.Data}"));
             process.Start();
             while (!process.StandardOutput.EndOfStream)
             {
-                logStream.Add(process.StandardOutput.ReadLine());
+                logStream.Add(await process.StandardOutput.ReadLineAsync());
+                var error = await process.StandardError.ReadLineAsync();
+                if(!string.IsNullOrEmpty(error))
+                    logStream.Add(error);
             }
-            process.WaitForExit();
+            await process.WaitForExitAsync();
             File.Delete(tempFilename);
         }
     }

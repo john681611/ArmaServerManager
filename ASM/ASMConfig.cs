@@ -24,6 +24,9 @@ namespace ASM.Lib
 
         public Dictionary<string,Template> Templates {get; set;}
 
+        [JsonIgnore]
+        internal string filePath {get; set;}
+
         internal void FindMissions()
         {
             if (string.IsNullOrEmpty(MissionsPath))
@@ -42,17 +45,21 @@ namespace ASM.Lib
             DirectoryInfo di = new DirectoryInfo(path);
             if (!di.GetFiles().Any(x => x.Name == "ASMconfig.json"))
                 return Load(path + "/..");
-            using (StreamReader r = new StreamReader(path + "/ASMconfig.json"))
+            path = $"{path}/ASMconfig.json";
+
+            using (StreamReader r = new StreamReader(path))
             {
                 string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<ASMConfig>(json);
+                var config = JsonConvert.DeserializeObject<ASMConfig>(json);
+                config.filePath = path;
+                return config;
             }
         }
 
         public void Save()
         {
             var json = JsonConvert.SerializeObject(this, formatting: Formatting.Indented);
-            File.WriteAllText("../config.json", json);
+            File.WriteAllText(filePath, json);
         }
 
         internal void FindMods()

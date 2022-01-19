@@ -188,6 +188,12 @@
         "3CB BAF Vehicles",
         "3CB BAF Weapons"
       ]
+    },
+    "bob": {
+      "Mods": [
+        "3CB BAF Units (ACE compatibility)",
+        "CUP ACE3 Compatibility Addon - Vehicles"
+      ]
     }
   }
 }
