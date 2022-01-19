@@ -80,7 +80,9 @@
                 <button class="btn btn-danger form-control"
                     @onclick='() => ASM.Config.ToggleServerSide(selectedMods)'>Toggle ServerSide Mod</button>
             </div>
-            @Body
+        </div>
+        <div class=bottom-bar>
+            <LoggerAll logs="@ASM.logStream"/>
         </div>
     </div>
 </div>

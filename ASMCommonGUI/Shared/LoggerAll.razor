@@ -1,0 +1,38 @@
+@if (showLogs)
+{
+    <div class="alert alert-secondary" role="info">
+        <div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-secondary" @onclick="() => ToggleShowLogs()"><span
+                    class="oi oi-bug"></span>@logs.Count()</button>
+                <button class="btn btn-secondary" @onclick="() => ClearLogs()"><span
+                    class="oi oi-reload"></span>Clear</button>
+            </div>
+            @foreach (var log in logs)
+            {
+                <p>@log</p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <button class="btn btn-secondary btn-sm" @onclick="() => ToggleShowLogs()"><span class="oi oi-bug"></span></button>
+}
+
+@code {
+    [Parameter] public List<string> logs { get; set; }
+    private bool showLogs = false;
+
+    public void ClearLogs()
+    {
+        logs.Clear();
+        showLogs = false;
+        StateHasChanged();
+    }
+
+    private void ToggleShowLogs()
+    {
+        showLogs = !showLogs;
+    }
+}
