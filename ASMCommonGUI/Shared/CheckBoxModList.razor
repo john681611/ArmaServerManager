@@ -2,6 +2,7 @@
 <div style=@Style class="checkboxList">
     @if (Data != null)
     {
+        var lastfistChar = "";
         foreach (var item in Data)
         {
             var key = item.Key;
@@ -10,6 +11,12 @@
             if (SelectedValues.Contains(key))
             {
                 Checked = true;
+            }
+            @if(lastfistChar !=  value.Name[0].ToString())
+            {
+                lastfistChar = value.Name[0].ToString();
+                <div class="checkboxList-break"></div>
+                <div class="checkboxList-group">@lastfistChar: </div>
             }
             <label class="checkboxList-item @((value.ServerSide? "serverSide" : ""))">
                 <input type="checkbox" checked=@Checked

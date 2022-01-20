@@ -54,13 +54,15 @@ namespace ASM.Lib
             foreach (var folder in modFolders)
             {
                 var metaData = GetCPPFile(folder.GetFiles().First(x => x.Name == "meta.cpp").FullName);
-                if (Mods.ContainsKey(metaData["name"]))
+                var modData = GetCPPFile(folder.GetFiles().First(x => x.Name == "mod.cpp").FullName);
+
+                if (Mods.ContainsKey(metaData["publishedid"]))
                     continue;
                 Mods.Add(metaData["publishedid"], new Mod
                 {
 
                     Path = folder.FullName,
-                    Name = metaData["name"]
+                    Name = modData["name"]
                 });
             }
         }
@@ -94,6 +96,8 @@ namespace ASM.Lib
                 if (subStr.Contains("="))
                 {
                     var KeyVal = subStr.Split("=");
+                    if(dict.ContainsKey(KeyVal[0].Trim()))
+                        continue;
                     dict.Add(KeyVal[0].Trim(), KeyVal[1].Replace("\"", "").Replace(";", "").Trim());
                 }
             }
