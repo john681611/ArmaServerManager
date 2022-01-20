@@ -8,33 +8,34 @@ namespace ASM.Lib
     class BatRunner
     {
         
-        public static void RunServer(List<string> modIds, ASMConfig Config, List<string> logStream)
-        {   
-            var mods = Config.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
+        public static void RunServer(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
+        {   var server = Config.Servers[activeServerId];
+            var mods = server.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
             var lines = new List<string>{
-                $"start {Config.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={Config.ConfigPath} -bepath={Config.BattleEyePath} -cfg={Config.NetworkConfig} {Config.ExtraArgs}"
+                $"start {Config.Servers[activeServerId].ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={server.ConfigPath} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}"
             };
             RunBat(lines, logStream);
         }
 
-        public static void RunSteamModsUpdate(List<string> modIds, ASMConfig Config, List<string> logStream)
+        public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
         {
-            var mods = Config.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
-
+            var mods = Config.Servers[activeServerId].Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
+            var server = Config.Servers[activeServerId];
             var lines = new List<string>();
             foreach (var mod in mods)
             {
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {Config.ServerBranch}\" {mod.SteamId} validate +quit");
+                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {mod.SteamId} validate +quit");
             }
             RunBat(lines, logStream);
         }
 
-        public static void RunSteamServerUpdate(ASMConfig Config, List<string> logStream)
+        public static void RunSteamServerUpdate(string activeServerId, ASMConfig Config, List<string> logStream)
         {
+            var server = Config.Servers[activeServerId];
             var lines = new List<string>{
-                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {Config.ServerPath}\" +login {Config.SteamLogin}  +\"app_update {Config.ServerBranch}\" validate +quit"
+                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\" +login {Config.SteamLogin}  +\"app_update {server.ServerBranch}\" validate +quit"
             };
             RunBat(lines, logStream);
         }

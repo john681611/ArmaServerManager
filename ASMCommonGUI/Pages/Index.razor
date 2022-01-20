@@ -15,13 +15,22 @@
         <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
             <ul class="nav flex-column">
                 <li class="nav-item px-3">
-                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods)'>Start Server</button>
+                    <label>Server</label>
+                    <select class="form-control selectpicker" @bind="activeServer">
+                        @foreach (var template in ASM.Config.Servers)
+                        {
+                            <option value=@template.Key>@template.Key</option>
+                        }
+                    </select>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods)'>Run Mods Update</button>
+                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods, activeServer)'>Start Server</button>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate()'>Run Server Update</button>
+                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods, activeServer)'>Run Mods Update</button>
+                </li>
+                <li class="nav-item px-3">
+                    <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
                 </li>
             </ul>
         </div>
@@ -55,7 +64,7 @@
                             <label>Stored
                                 <select class="form-control selectpicker" @bind="selectedTemplate">
                                     <option value="">New Template</option>
-                                    @foreach (var template in ASM.Config.Templates)
+                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates)
                                     {
                                         <option value=@template.Key>@template.Key</option>
                                     }
@@ -76,9 +85,9 @@
                     }
                     </select> *@
                 
-                <CheckBoxModList Data="ASM.Config.Mods" SelectedValues="selectedMods"></CheckBoxModList>
+                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedMods"></CheckBoxModList>
                 <button class="btn btn-danger form-control"
-                    @onclick='() => ASM.Config.ToggleServerSide(selectedMods)'>Toggle ServerSide Mod</button>
+                    @onclick='() => ASM.ToggleServerSide(selectedMods, activeServer)'>Toggle ServerSide Mod</button>
             </div>
         </div>
         <div class=bottom-bar>
@@ -104,6 +113,7 @@
     private ASMCore ASM;
 
     private string templateName;
+    private string activeServer;
     private List<string> selectedMods;
     private string selectedMission;
 
@@ -111,6 +121,7 @@
     protected override void OnInitialized()
     {
         ASM = new ASMCore();
+        activeServer = ASM.Config.Servers.First().Key;
         selectedMods = new List<string>();
     }
 
@@ -124,7 +135,7 @@
 
     private void SaveTemplate()
     {
-        ASM.Config.Templates.Add(
+        ASM.Config.Servers[activeServer].Templates.Add(
         templateName,
         new Template
         {
@@ -136,14 +147,14 @@
 
     private void LoadTemplate()
     {
-        if (!ASM.Config.Templates.ContainsKey(selectedTemplate))
+        if (!ASM.Config.Servers[activeServer].Templates.ContainsKey(selectedTemplate))
         {
             templateName = "";
             selectedMods = new List<string>();
             return;
         }
 
-        var template = ASM.Config.Templates[selectedTemplate];
+        var template = ASM.Config.Servers[activeServer].Templates[selectedTemplate];
         templateName = selectedTemplate;
         selectedMods = template.Mods;
     }

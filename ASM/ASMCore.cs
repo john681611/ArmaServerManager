@@ -19,12 +19,7 @@ along with Briefing Room for DCS World. If not, see https://www.gnu.org/licenses
 */
 
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
 
 namespace ASM.Lib
 {
@@ -40,23 +35,18 @@ namespace ASM.Lib
         public ASMCore()
         {
             Config = ASMConfig.Load();
-            Config.FindMods();
-            Config.FindMissions();
         }
 
-        public void RunServer(List<string> modIds)
-        {   
-            BatRunner.RunServer(modIds, Config, logStream);
-        }
+        public void RunServer(List<string> modIds, string activeServerId) => BatRunner.RunServer(modIds, activeServerId, Config, logStream);
 
-        public void RunSteamModsUpdate(List<string> modIds)
+        public void RunSteamModsUpdate(List<string> modIds, string activeServerId) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, Config, logStream);
+
+        public void RunSteamServerUpdate(string activeServerId) =>BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
+
+        public void ToggleServerSide(List<string> modIds, string activeServerId)
         {
-            BatRunner.RunSteamModsUpdate(modIds, Config, logStream);
-        }
-
-        public void RunSteamServerUpdate()
-        {
-            BatRunner.RunSteamServerUpdate(Config, logStream);
+            Config.Servers[activeServerId].ToggleServerSide(modIds);
+            Config.Save();
         }
     }
 }
