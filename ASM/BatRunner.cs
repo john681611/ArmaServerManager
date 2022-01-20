@@ -21,13 +21,20 @@ namespace ASM.Lib
 
         public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
         {
-            var mods = Config.Servers[activeServerId].Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
             var server = Config.Servers[activeServerId];
             var lines = new List<string>();
-            foreach (var mod in mods)
+            foreach (var modId in modIds)
             {
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {mod.SteamId} validate +quit");
+                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit");
             }
+            RunBat(lines, logStream);
+        }
+         public static void RunSteamModInstall(string modId, string folderName, string activeServerId, ASMConfig Config, List<string> logStream)
+        {
+            var server = Config.Servers[activeServerId];
+            var lines = new List<string>{
+                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit"
+            };
             RunBat(lines, logStream);
         }
 

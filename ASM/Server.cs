@@ -56,10 +56,11 @@ namespace ASM.Lib
                 var metaData = GetCPPFile(folder.GetFiles().First(x => x.Name == "meta.cpp").FullName);
                 if (Mods.ContainsKey(metaData["name"]))
                     continue;
-                Mods.Add(metaData["name"], new Mod
+                Mods.Add(metaData["publishedid"], new Mod
                 {
+
                     Path = folder.FullName,
-                    SteamId = metaData["publishedid"]
+                    Name = metaData["name"]
                 });
             }
         }

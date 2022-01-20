@@ -6,7 +6,7 @@
     margin-left: 5px;
 }
 
-.darkMode .main {
+.darkMode {
     background-color: #101002;
     color: white;
 }
@@ -24,6 +24,10 @@
     color: white;
 }
 
+.darkMode .nav-link, a {
+    color: #ffc107;
+}
+
 .darkMode .navbar-brand > img {
     filter: drop-shadow(0 0 1rem rgb(255, 255, 255));
 }
@@ -36,8 +40,4 @@
 
 .darkMode .blazored-typeahead__selected-item-highlighted, .darkMode .blazored-typeahead__selected-item {
     color: black;
-}
-
-.darkMode select option {
-    background-color: #0a263f;
 }

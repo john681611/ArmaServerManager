@@ -24,17 +24,17 @@
                     </select>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedMods, activeServer)'>Start Server</button>
+                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedModIds, activeServer)'>Start Server</button>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedMods, activeServer)'>Run Mods Update</button>
+                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer)'>Run Mods Update</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
                 </li>
                 <li class="nav-item px-3">
                      <button class="btn btn-danger form-control"
-                    @onclick='() => ASM.Config.ToggleServerSide(selectedMods)'>Toggle ServerSide Mod</button>
+                    @onclick='() => ToggleServerSide()'>Toggle ServerSide Mod</button>
                 </li>
                
             </ul>
@@ -61,27 +61,23 @@
                 <div class="generator-group flex-justify-spaced flex-margin-fix">
                     <div class="form-group flex-block">
                         <div class="input-group"> 
-                            <label>Name
-                                <input class="form-control" @bind="templateName" required />
-                            </label>
-                            <div class="form-group-prepend">
-                                <button class="btn btn-warning row-button" @onclick='() => SaveTemplate()'>Save</button>
+                            <input class="form-control" @bind="templateName" placeholder="Template Name" required />
+                            <div class="input-group-append">
+                                <button class="btn btn-warning" @onclick='() => SaveTemplate()' type="button">Save</button>
                             </div>
                         </div>
                     </div>
                     <div class="form-group flex-block">
                         <div class="input-group">
-                            <label>Stored
-                                <select class="form-control selectpicker" @bind="selectedTemplate">
-                                    <option value="">New Template</option>
-                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates)
-                                    {
-                                        <option value=@template.Key>@template.Key</option>
-                                    }
-                                </select>
-                            </label>
-                            <div class="form-group-prepend">
-                                <button class="btn btn-warning row-button" @onclick='() => LoadTemplate()'>Load</button>
+                            <select class="form-control selectpicker" @bind="selectedTemplate">
+                                <option value="">New Template</option>
+                                @foreach (var template in ASM.Config.Servers[activeServer].Templates)
+                                {
+                                    <option value=@template.Key>@template.Key</option>
+                                }
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-warning" @onclick='() => LoadTemplate()'>Load</button>
                             </div>
                         </div>
                     </div>
@@ -95,9 +91,18 @@
                     }
                     </select> *@
                 
-                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedMods"></CheckBoxModList>
+                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds"></CheckBoxModList>
             </div>
         </div>
+        @* <div class="form-group flex-block">
+            <div class="input-group">
+                <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
+                <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
+                <div class="input-group-append">
+                    <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
+                </div>
+            </div>
+        </div> *@
         <div class=bottom-bar>
             <LoggerAll logs="@ASM.logStream"/>
         </div>
@@ -122,34 +127,42 @@
 
     private string templateName;
     private string activeServer;
-    private List<string> selectedMods;
+    private List<string> selectedModIds;
     private string selectedMission;
+
+    private string newFolderName;
+    private string newModSteamId;
 
     private string selectedTemplate = "";
     protected override void OnInitialized()
     {
         ASM = new ASMCore();
         activeServer = ASM.Config.Servers.First().Key;
-        selectedMods = new List<string>();
+        selectedModIds = new List<string>();
     }
 
     private void ToggleMod(string modId)
     {
-        if (selectedMods.Contains(modId))
-            selectedMods.Remove(modId);
+        if (selectedModIds.Contains(modId))
+            selectedModIds.Remove(modId);
         else
-            selectedMods.Add(modId);
+            selectedModIds.Add(modId);
+    }
+
+    private void ToggleServerSide()
+    {
+        ASM.Config.ToggleServerSide(selectedModIds);
+        StateHasChanged();
     }
 
     private void SaveTemplate()
     {
-        ASM.Config.Servers[activeServer].Templates.Add(
-        templateName,
-        new Template
+        var template = new Template();
+        foreach (var modId in selectedModIds)
         {
-            ModIds = selectedMods
+            template.Mods.Add(modId, ASM.Config.Servers[activeServer].Mods[modId].Name);
         }
-        );
+        ASM.Config.Servers[activeServer].Templates.Add(templateName,template);
         ASM.Config.Save();
     }
 
@@ -158,12 +171,13 @@
         if (!ASM.Config.Servers[activeServer].Templates.ContainsKey(selectedTemplate))
         {
             templateName = "";
-            selectedMods = new List<string>();
+            selectedModIds = new List<string>();
             return;
         }
 
         var template = ASM.Config.Servers[activeServer].Templates[selectedTemplate];
         templateName = selectedTemplate;
-        selectedMods = template.ModIds;
+        selectedModIds = template.Mods.Keys.ToList();
+        StateHasChanged();
     }
 }

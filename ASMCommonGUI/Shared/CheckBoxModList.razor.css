@@ -15,15 +15,15 @@
 
 .checkboxList-item > span {
     padding: 5px;
-    border: solid 1px #0366d6;
+    border: solid 1px #7c7c12;
     border-radius: .25rem;
     margin: 4px;
     display: block;
 }
 
 .checkboxList-item > input:checked + span {
-    background-color: #0366d6;
-    border-color: #0C3050;
+    background-color: #7c7c12;
+    border-color: #7c7c12;
     color: white;
 }
 
@@ -38,7 +38,7 @@
     position: absolute;
     background-color: #F6F7FF;
     padding: 5px;
-    border: solid 1px #0366d6;
+    border: solid 1px #7c7c12;
     border-radius: .25rem;
     margin: 2px;
     color: black;

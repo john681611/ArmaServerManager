@@ -38,52 +38,72 @@
         </div>
 
         <div class="content px-4">
-            <div> 
-                <label>Steam Path
-                    <input class="form-control" @bind="ASM.Config.SteamPath" required />
-                </label>
-                <label>Steam Login
-                    <input class="form-control" @bind="ASM.Config.SteamLogin" required />
-                </label>
+            <div>
+                 <div class="generator-group flex-justify-spaced flex-margin-fix">
+                    <div class="form-group flex-block">
+                        <label>Steam Path</label>    
+                        <input class="form-control" @bind="ASM.Config.SteamPath" required />
+                    </div>
+                    <div class="form-group flex-block">
+                        <label>Steam Login</label>
+                        <input class="form-control" @bind="ASM.Config.SteamLogin" required />
+                    </div>
+                </div>
+                
+                
                 <h2>Servers</h2>
                 @foreach (var server in ASM.Config.Servers)
                 {
                     <div class="form-group">
                         <h3>@server.Key</h3>
-                        <label>Server Path
-                            <input class="form-control" @bind="server.Value.ServerPath" required />
-                        </label>
-                        <label>Missions Path
-                        <input class="form-control" @bind="server.Value.MissionsPath" required />
-                        </label>
-                        <label>Mods Path
-                        <input class="form-control" @bind="server.Value.ModsPath" required />
-                        </label>
-                        <label>Config Path
-                        <input class="form-control" @bind="server.Value.ConfigPath" required />
-                        </label>
-                        <label>MNetwork Config
-                        <input class="form-control" @bind="server.Value.NetworkConfig" required />
-                        </label>
-                        <label>BattleEye Path
-                        <input class="form-control" @bind="server.Value.BattleEyePath" required />
-                        </label>
-                        <label>ExtraArgs
-                        <input class="form-control" @bind="server.Value.ExtraArgs" required />
-                        </label>
-                        <label>Server Branch
-                        <input class="form-control" @bind="server.Value.ServerBranch" required />
-                        </label>
+                        <div class="generator-group flex-justify-spaced flex-margin-fix">
+                            <div class="form-group flex-block">
+                                <label>Server Path</label>    
+                                <input class="form-control" @bind="server.Value.ServerPath" required />
+                            </div>
+                            <div class="form-group flex-block">
+                                <label>Missions Path</label>
+                                <input class="form-control" @bind="server.Value.MissionsPath" required />
+                            </div>
+                        </div>
+                        <div class="generator-group flex-justify-spaced flex-margin-fix">
+                            <div class="form-group flex-block">
+                                <label>Mods Path</label>   
+                                <input class="form-control" @bind="server.Value.ModsPath" required />
+                            </div>
+                            <div class="form-group flex-block">
+                                <label>Config Path</label>
+                                <input class="form-control" @bind="server.Value.ConfigPath" required />
+                            </div>
+                        </div>
+                        <div class="generator-group flex-justify-spaced flex-margin-fix">
+                            <div class="form-group flex-block">
+                                <label>Network Config</label>   
+                                    <input class="form-control" @bind="server.Value.NetworkConfig" required />
+                            </div>
+                            <div class="form-group flex-block">
+                                <label>BattleEye Path</label>
+                                <input class="form-control" @bind="server.Value.BattleEyePath" required />
+                            </div>
+                        </div>
+                        <div class="generator-group flex-justify-spaced flex-margin-fix">
+                            <div class="form-group flex-block">
+                                <label>ExtraArgs</label>  
+                                <input class="form-control" @bind="server.Value.ExtraArgs" required />
+                            </div>
+                            <div class="form-group flex-block">
+                                <label>BattleEye Path</label>
+                                <input class="form-control" @bind="server.Value.BattleEyePath" required />
+                            </div>
+                        </div>
                         <hr/>
                     </div>
                 }
                 <div class="form-group flex-block">
                     <div class="input-group"> 
-                        <label>Name
-                            <input class="form-control" @bind="newServerName" required />
-                        </label>
-                        <div class="form-group-prepend">
-                            <button class="btn btn-warning row-button" @onclick='() => NewServer()'>Create Server</button>
+                            <input class="form-control" @bind="newServerName" placeholder="Server Name" required />
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" @onclick='() => NewServer()'>Create Server</button>
                         </div>
                     </div>
                 </div>

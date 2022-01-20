@@ -4,6 +4,6 @@ namespace ASM.Lib
 {
     public class Template
     {
-        public List<string> ModIds { get; set; }
+        public Dictionary<string, string> Mods { get; set; } = new Dictionary<string, string>();
     }
 }

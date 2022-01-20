@@ -57,6 +57,7 @@ namespace ASM.Lib
                 else
                     ServerSideMods.Add(modId); 
             }
+            SetServerSide();
             Save();
         }
 
@@ -67,7 +68,7 @@ namespace ASM.Lib
             var generatedServers = JsonConvert.DeserializeObject<Dictionary<string, GeneratedServer>>(json);
             foreach (var server in generatedServers)
             {
-                if (config.Servers.ContainsKey(server.Key))
+                if (!config.Servers.ContainsKey(server.Key))
                     continue;
                 config.Servers[server.Key].Templates = server.Value.Templates;
             }
