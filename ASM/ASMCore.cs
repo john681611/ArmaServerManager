@@ -35,6 +35,7 @@ namespace ASM.Lib
         public ASMCore()
         {
             Config = ASMConfig.Load();
+            Config.SetServerSide();
         }
 
         public void RunServer(List<string> modIds, string activeServerId) => BatRunner.RunServer(modIds, activeServerId, Config, logStream);
@@ -43,10 +44,6 @@ namespace ASM.Lib
 
         public void RunSteamServerUpdate(string activeServerId) =>BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
 
-        public void ToggleServerSide(List<string> modIds, string activeServerId)
-        {
-            Config.Servers[activeServerId].ToggleServerSide(modIds);
-            Config.Save();
-        }
+        
     }
 }

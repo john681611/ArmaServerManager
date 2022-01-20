@@ -12,6 +12,8 @@ namespace ASM.Lib
         public string SteamLogin { get; set; }
         public Dictionary<string, Server> Servers { get; set; }
 
+        public List<string> ServerSideMods {get; set;} = new List<string>();
+
         [JsonIgnore]
         internal string filePath { get; set; }
 
@@ -24,31 +26,49 @@ namespace ASM.Lib
             if (!di.GetFiles().Any(x => x.Name == "ASMconfig.json"))
                 return Load(path + "/..");
             path = $"{path}/ASMconfig.json";
-            StreamReader r = new StreamReader(path);
-            string json = r.ReadToEnd();
+            using var streamReader = new StreamReader(path);
+            string json = streamReader.ReadToEnd();
             var config = JsonConvert.DeserializeObject<ASMConfig>(json);
             config.filePath = path;
 
             config = LoadGenerated(path, config);
             foreach (var server in config.Servers)
             {
-                server.Value.Load();
+                server.Value.Load();  
             }
             return config;
 
         }
 
+        public void SetServerSide()
+        {
+            foreach (var server in Servers)
+            {
+                server.Value.SetServerSide(ServerSideMods);
+            }
+        }
+
+        public void ToggleServerSide(List<string> modIds)
+        {
+            foreach (var modId in modIds)
+            {
+                if(ServerSideMods.Contains(modId))
+                   ServerSideMods.Remove(modId);
+                else
+                    ServerSideMods.Add(modId); 
+            }
+            Save();
+        }
+
         private static ASMConfig LoadGenerated(string path, ASMConfig config)
         {
-            StreamReader r = new StreamReader(path.Replace("ASMconfig", "ASMgenerated"));
-            string json = r.ReadToEnd();
+            using var streamReader = new StreamReader(path.Replace("ASMconfig", "ASMgenerated"));
+            string json = streamReader.ReadToEnd();
             var generatedServers = JsonConvert.DeserializeObject<Dictionary<string, GeneratedServer>>(json);
             foreach (var server in generatedServers)
             {
                 if (config.Servers.ContainsKey(server.Key))
                     continue;
-                config.Servers[server.Key].Missions = server.Value.Missions;
-                config.Servers[server.Key].Mods = server.Value.Mods;
                 config.Servers[server.Key].Templates = server.Value.Templates;
             }
             return config;
@@ -71,6 +91,10 @@ namespace ASM.Lib
             var json = JsonConvert.SerializeObject(generatedServers, formatting: Formatting.Indented);
             File.WriteAllText(filePath.Replace("ASMconfig", "ASMgenerated"), json);
         }
+
+        
+
+        
 
     }
 }

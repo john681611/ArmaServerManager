@@ -4,6 +4,6 @@ namespace ASM.Lib
 {
     public class Template
     {
-        public List<string> Mods { get; set; }
+        public List<string> ModIds { get; set; }
     }
 }

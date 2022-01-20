@@ -32,6 +32,11 @@
                 <li class="nav-item px-3">
                     <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
                 </li>
+                <li class="nav-item px-3">
+                     <button class="btn btn-danger form-control"
+                    @onclick='() => ASM.Config.ToggleServerSide(selectedMods)'>Toggle ServerSide Mod</button>
+                </li>
+               
             </ul>
         </div>
         <div class="bottom-logo">
@@ -43,9 +48,14 @@
 
     <div class="main">
         <div class="top-row px-4">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span>Launcher
+            </NavLink>
+            <NavLink class="nav-link" href="Config" Match="NavLinkMatch.All">
+                <span class="oi oi-cog" aria-hidden="true"></span>Config
+            </NavLink>
             <a href="@ASMCore.REPO_URL" target="_blank">GitHub</a>
         </div>
-
         <div class="content px-4">
             <div>
                 <div class="generator-group flex-justify-spaced flex-margin-fix">
@@ -86,8 +96,6 @@
                     </select> *@
                 
                 <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedMods"></CheckBoxModList>
-                <button class="btn btn-danger form-control"
-                    @onclick='() => ASM.ToggleServerSide(selectedMods, activeServer)'>Toggle ServerSide Mod</button>
             </div>
         </div>
         <div class=bottom-bar>
@@ -139,7 +147,7 @@
         templateName,
         new Template
         {
-            Mods = selectedMods
+            ModIds = selectedMods
         }
         );
         ASM.Config.Save();
@@ -156,6 +164,6 @@
 
         var template = ASM.Config.Servers[activeServer].Templates[selectedTemplate];
         templateName = selectedTemplate;
-        selectedMods = template.Mods;
+        selectedMods = template.ModIds;
     }
 }

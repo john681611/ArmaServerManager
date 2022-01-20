@@ -64,6 +64,14 @@ namespace ASM.Lib
             }
         }
 
+        internal void SetServerSide(List<string> serverSideMods)
+        {
+            foreach (var mod in Mods)
+            {
+               mod.Value.ServerSide = serverSideMods.Contains(mod.Key);
+            }
+        }
+
         internal void Load()
         {
             FindMissions();
@@ -73,19 +81,8 @@ namespace ASM.Lib
         internal GeneratedServer GetGeneratedServer() =>
             new GeneratedServer
             {
-                Mods = Mods,
-                Missions = Missions,
                 Templates = Templates,
             };
-
-        public void ToggleServerSide(List<string> modIds)
-        {
-            var mods = Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
-            foreach (var mod in mods)
-            {
-                mod.ServerSide = !mod.ServerSide;
-            }
-        }
 
         private Dictionary<string, string> GetCPPFile(string path)
         {
