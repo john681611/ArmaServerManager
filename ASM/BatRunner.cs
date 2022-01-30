@@ -1,21 +1,28 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace ASM.Lib
-{   
+{
     class BatRunner
     {
-        
+
         public static void RunServer(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
-        {   var server = Config.Servers[activeServerId];
+        {
+            var server = Config.Servers[activeServerId];
             var mods = server.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
-            var lines = new List<string>{
-                $"start {Config.Servers[activeServerId].ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={server.ConfigPath} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}"
-            };
+            var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
+            foreach (var mod in server.Mods)
+            {
+                lines.Add($"xcopy \"{FindKeysFolder(mod.Value.Path)}\" \"{server.ServerPath}\\keys\" /C /y");
+            }
+            if (!string.IsNullOrEmpty(server.OptKeysPath))
+                lines.Add($"xcopy  \"{server.OptKeysPath}\" \"{server.ServerPath}\\keys\" /C /y");
+            lines.Add($"start {server.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={server.ConfigPath} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
             RunBat(lines, logStream);
         }
 
@@ -29,7 +36,7 @@ namespace ASM.Lib
             }
             RunBat(lines, logStream);
         }
-         public static void RunSteamModInstall(string modId, string folderName, string activeServerId, ASMConfig Config, List<string> logStream)
+        public static void RunSteamModInstall(string modId, string folderName, string activeServerId, ASMConfig Config, List<string> logStream)
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
@@ -54,8 +61,8 @@ namespace ASM.Lib
             {
                 foreach (var line in lines)
                 {
-                writer.WriteLine(line);
-                    
+                    writer.WriteLine(line);
+
                 }
                 writer.WriteLine("exit");
             }
@@ -69,11 +76,24 @@ namespace ASM.Lib
             {
                 logStream.Add(await process.StandardOutput.ReadLineAsync());
                 var error = await process.StandardError.ReadLineAsync();
-                if(!string.IsNullOrEmpty(error))
+                if (!string.IsNullOrEmpty(error))
                     logStream.Add(error);
             }
             await process.WaitForExitAsync();
             File.Delete(tempFilename);
+        }
+
+        private static string FindKeysFolder(string modPath)
+        {
+            DirectoryInfo di = new DirectoryInfo(modPath);
+            try
+            {
+                return di.GetDirectories().First(x => x.Name.ToLower().Contains("key")).FullName;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Can't find Keys folder in {modPath}", innerException: ex);
+            }
         }
     }
 }

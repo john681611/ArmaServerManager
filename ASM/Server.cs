@@ -9,6 +9,7 @@ namespace ASM.Lib
     public class Server
     {
         public string MissionsPath { get; set; }
+        public string OptKeysPath { get; set; }
         public string ServerPath { get; set; }
         public string ModsPath { get; set; }
         public string ConfigPath { get; set; }
