@@ -61,9 +61,8 @@ namespace ASM.Lib
                     continue;
                 Mods.Add(metaData["publishedid"], new Mod
                 {
-
                     Path = folder.FullName,
-                    Name = modData["name"]
+                    Name = modData["name"] + (Mods.Any(x => x.Value.Name == modData["name"]) ?  $"- AKA: {metaData["name"]}" : "")
                 });
             }
         }

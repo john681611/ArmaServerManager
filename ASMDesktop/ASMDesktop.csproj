@@ -20,7 +20,9 @@
 
   <ItemGroup>
     <Content Include="Resources\**" LinkBase="Resources" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="..\config.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\ASMconfig.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\ASMconfigTemplate.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\ASMgenerated.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -3,7 +3,7 @@
     @if (Data != null)
     {
         var lastfistChar = "";
-        foreach (var item in Data)
+        foreach (var item in Data.OrderBy(x => x.Value.Name))
         {
             var key = item.Key;
             var value = item.Value;
@@ -23,6 +23,7 @@
             @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }" />
                 <span>
                     @value.Name
+                    <span class="description">@value.Path</span>
                 </span>
             </label>
         }

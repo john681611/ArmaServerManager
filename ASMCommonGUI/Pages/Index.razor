@@ -162,7 +162,7 @@
         {
             template.Mods.Add(modId, ASM.Config.Servers[activeServer].Mods[modId].Name);
         }
-        ASM.Config.Servers[activeServer].Templates.Add(templateName,template);
+        ASM.Config.Servers[activeServer].Templates[templateName] = template;
         ASM.Config.Save();
     }
 
