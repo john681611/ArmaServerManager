@@ -16,9 +16,9 @@ namespace ASM.Lib
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
             var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
-            foreach (var mod in server.Mods)
+            foreach (var mod in mods)
             {
-                lines.Add($"xcopy \"{FindKeysFolder(mod.Value.Path)}\" \"{server.ServerPath}\\keys\" /C /y");
+                lines.Add($"xcopy \"{FindKeysFolder(mod.Path)}\" \"{server.ServerPath}\\keys\" /C /y");
             }
             if (!string.IsNullOrEmpty(server.OptKeysPath))
                 lines.Add($"xcopy  \"{server.OptKeysPath}\" \"{server.ServerPath}\\keys\" /C /y");
@@ -68,17 +68,7 @@ namespace ASM.Lib
             }
             Process process = new Process();
             process.StartInfo.FileName = tempFilename;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => logStream.Add($"Error: {e.Data}"));
             process.Start();
-            while (!process.StandardOutput.EndOfStream)
-            {
-                logStream.Add(await process.StandardOutput.ReadLineAsync());
-                var error = await process.StandardError.ReadLineAsync();
-                if (!string.IsNullOrEmpty(error))
-                    logStream.Add(error);
-            }
             await process.WaitForExitAsync();
             File.Delete(tempFilename);
         }
