@@ -16,7 +16,8 @@ namespace ASM.Lib
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
             var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
-            foreach (var mod in mods)
+            var modKeys = mods.Where(x => !x.Path.ToLower().EndsWith("gm"));
+            foreach (var mod in modKeys)
             {
                 lines.Add($"xcopy \"{FindKeysFolder(mod.Path)}\" \"{server.ServerPath}\\keys\" /C /y");
             }

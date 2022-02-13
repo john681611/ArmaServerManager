@@ -35,7 +35,7 @@ namespace ASM.Lib
         }
 
         private void FindMods()
-        {
+        {   
             if (string.IsNullOrEmpty(ModsPath))
                 throw new Exception("NO MODS PATH");
             DirectoryInfo di = new DirectoryInfo(ModsPath);
@@ -65,6 +65,29 @@ namespace ASM.Lib
                     Name = modData["name"] + (Mods.Any(x => x.Value.Name == modData["name"]) ?  $"- AKA: {metaData["name"]}" : "")
                 });
             }
+
+            if (string.IsNullOrEmpty(ServerPath))
+                throw new Exception("NO SERVER PATH");
+            di = new DirectoryInfo(ServerPath);
+            directories = di.GetDirectories();
+            var cdlc = new Dictionary<string, Mod>{
+                {"gm", new Mod{
+                    Name=" Global Mobilization"}
+                },
+                {"ws", new Mod{
+                    Name=" Western Sahara"}
+                },
+                {"vn", new Mod{
+                    Name=" S.O.G PF"}
+                }
+            };
+            foreach (var key in cdlc.Keys)
+                if(directories.Any(x => x.Name.ToLower() == key))
+                {
+                    cdlc[key].Path = directories.First(x => x.Name.ToLower() == key).FullName;
+                    Mods.Add(key, cdlc[key]);
+                }
+
         }
 
         internal void SetServerSide(List<string> serverSideMods)
