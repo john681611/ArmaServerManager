@@ -16,10 +16,10 @@ namespace ASM.Lib
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
             var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
-            var modKeys = mods.Where(x => !x.Path.ToLower().EndsWith("gm"));
-            foreach (var mod in modKeys)
+            var keyFolders = FindKeyFolders(mods);
+            foreach (var keyFolder in keyFolders)
             {
-                lines.Add($"xcopy \"{FindKeysFolder(mod.Path)}\" \"{server.ServerPath}\\keys\" /C /y");
+                lines.Add($"xcopy \"{keyFolder}\" \"{server.ServerPath}\\keys\" /C /y");
             }
             if (!string.IsNullOrEmpty(server.OptKeysPath))
                 lines.Add($"xcopy  \"{server.OptKeysPath}\" \"{server.ServerPath}\\keys\" /C /y");
@@ -74,17 +74,16 @@ namespace ASM.Lib
             File.Delete(tempFilename);
         }
 
-        private static string FindKeysFolder(string modPath)
+        private static List<string> FindKeyFolders(List<Mod> mods)
         {
-            DirectoryInfo di = new DirectoryInfo(modPath);
-            try
+            var modFolders = new List<string>();
+            foreach (var mod in mods)
             {
-                return di.GetDirectories().First(x => x.Name.ToLower().Contains("key")).FullName;
+                var directories = new DirectoryInfo(mod.Path).GetDirectories();
+                if(directories.Any(x => x.Name.ToLower().Contains("key")))
+                    modFolders.Add(directories.First(x => x.Name.ToLower().Contains("key")).FullName);
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Can't find Keys folder in {modPath}", innerException: ex);
-            }
+            return modFolders;
         }
     }
 }
