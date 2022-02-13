@@ -44,7 +44,7 @@ namespace ASM.Lib
             {
                 try
                 {
-                    return x.GetFiles().Any(x => x.Name == "mod.cpp");
+                    return x.GetFiles().Any(x => x.Name == "mod.cpp" ||  x.Name == "meta.cpp");
                 }
                 catch (System.Exception)
                 {
@@ -54,15 +54,14 @@ namespace ASM.Lib
             }).ToList();
             foreach (var folder in modFolders)
             {
-                var metaData = GetCPPFile(folder.GetFiles().First(x => x.Name == "meta.cpp").FullName);
-                var modData = GetCPPFile(folder.GetFiles().First(x => x.Name == "mod.cpp").FullName);
+                var modData = GetModData(folder);
 
-                if (Mods.ContainsKey(metaData["publishedid"]))
+                if (Mods.ContainsKey(modData["meta.cpp"]["publishedid"]))
                     continue;
-                Mods.Add(metaData["publishedid"], new Mod
+                Mods.Add(modData["meta.cpp"]["publishedid"], new Mod
                 {
                     Path = folder.FullName,
-                    Name = modData["name"] + (Mods.Any(x => x.Value.Name == modData["name"]) ?  $"- AKA: {metaData["name"]}" : "")
+                    Name = GetDisplayName(modData)
                 });
             }
 
@@ -110,6 +109,17 @@ namespace ASM.Lib
                 Templates = Templates,
             };
 
+        private Dictionary<string, Dictionary<string, string>> GetModData(DirectoryInfo folder)
+        {
+            var modinfo = new Dictionary<string, Dictionary<string, string>>();
+           foreach (var file in folder.GetFiles().Where(x => x.Name == "meta.cpp" || x.Name == "mod.cpp"))
+           {
+               modinfo[file.Name] = GetCPPFile(file.FullName);
+           } 
+ 
+           return modinfo;
+        }
+
         private Dictionary<string, string> GetCPPFile(string path)
         {
             var dict = new Dictionary<string, string>();
@@ -125,6 +135,15 @@ namespace ASM.Lib
                 }
             }
             return dict;
+        }
+
+        private string GetDisplayName(Dictionary<string, Dictionary<string, string>> modData)
+        {
+            if(modData.ContainsKey("mod.cpp") && modData.ContainsKey("meta.cpp"))
+                return  modData["mod.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["mod.cpp"]["name"]) ?  $"- AKA: {modData["meta.cpp"]["name"]}" : "");
+            if(modData.ContainsKey("mod.cpp"))
+                return modData["mod.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["mod.cpp"]["name"]) ?  $"- DUPLICATE" : "");
+            return modData["meta.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["meta.cpp"]["name"]) ?  $"- DUPLICATE" : ""); 
         }
     }
 }
