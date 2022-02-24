@@ -28,7 +28,7 @@ namespace ASM.Lib
         public const string VERSION = "0.0.7";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
-        public List<string> logStream {get; set;} = new List<string>();
+        public List<string> logStream { get; set; } = new List<string>();
         public const string BUILD_VERSION = "~BUILD_VERSION~";
 
         public ASMCore()
@@ -40,6 +40,6 @@ namespace ASM.Lib
         public void RunServer(List<string> modIds, string activeServerId) => BatRunner.RunServer(modIds, activeServerId, Config, logStream);
         public void RunSteamModsUpdate(List<string> modIds, string activeServerId) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, Config, logStream);
         public void RunSteamModInstall(string modId, string folderName, string activeServerId) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, Config, logStream);
-        public void RunSteamServerUpdate(string activeServerId) =>BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);  
+        public void RunSteamServerUpdate(string activeServerId) => BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
     }
 }

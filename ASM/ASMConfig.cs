@@ -12,7 +12,7 @@ namespace ASM.Lib
         public string SteamLogin { get; set; }
         public Dictionary<string, Server> Servers { get; set; }
 
-        public List<string> ServerSideMods {get; set;} = new List<string>();
+        public List<string> ServerSideMods { get; set; } = new List<string>();
 
         [JsonIgnore]
         internal string filePath { get; set; }
@@ -34,7 +34,7 @@ namespace ASM.Lib
             config = LoadGenerated(path, config);
             foreach (var server in config.Servers)
             {
-                server.Value.Load();  
+                server.Value.Load();
             }
             return config;
 
@@ -52,10 +52,10 @@ namespace ASM.Lib
         {
             foreach (var modId in modIds)
             {
-                if(ServerSideMods.Contains(modId))
-                   ServerSideMods.Remove(modId);
+                if (ServerSideMods.Contains(modId))
+                    ServerSideMods.Remove(modId);
                 else
-                    ServerSideMods.Add(modId); 
+                    ServerSideMods.Add(modId);
             }
             SetServerSide();
             Save();
@@ -74,7 +74,6 @@ namespace ASM.Lib
             }
             return config;
         }
-
         public void Save()
         {
             var json = JsonConvert.SerializeObject(this, formatting: Formatting.Indented);
@@ -92,10 +91,5 @@ namespace ASM.Lib
             var json = JsonConvert.SerializeObject(generatedServers, formatting: Formatting.Indented);
             File.WriteAllText(filePath.Replace("ASMconfig", "ASMgenerated"), json);
         }
-
-        
-
-        
-
     }
 }

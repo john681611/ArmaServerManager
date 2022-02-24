@@ -80,7 +80,7 @@ namespace ASM.Lib
             foreach (var mod in mods)
             {
                 var directories = new DirectoryInfo(mod.Path).GetDirectories();
-                if(directories.Any(x => x.Name.ToLower().Contains("key")))
+                if (directories.Any(x => x.Name.ToLower().Contains("key")))
                     modFolders.Add(directories.First(x => x.Name.ToLower().Contains("key")).FullName);
             }
             return modFolders;

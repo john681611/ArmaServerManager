@@ -7,9 +7,9 @@
     <div class="sidebar">
         <div class="top-row pl-4 navbar navbar-dark">
             <a class="navbar-brand" href=""></a>
-                <button class="navbar-toggler" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <button class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
 
         <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
@@ -39,9 +39,9 @@
 
         <div class="content px-4">
             <div>
-                 <div class="generator-group flex-justify-spaced flex-margin-fix">
+                <div class="generator-group flex-justify-spaced flex-margin-fix">
                     <div class="form-group flex-block">
-                        <label>Steam Path</label>    
+                        <label>Steam Path</label>
                         <input class="form-control" @bind="ASM.Config.SteamPath" required />
                     </div>
                     <div class="form-group flex-block">
@@ -49,8 +49,8 @@
                         <input class="form-control" @bind="ASM.Config.SteamLogin" required />
                     </div>
                 </div>
-                
-                
+
+
                 <h2>Servers</h2>
                 @foreach (var server in ASM.Config.Servers)
                 {
@@ -58,7 +58,7 @@
                         <h3>@server.Key</h3>
                         <div class="generator-group flex-justify-spaced flex-margin-fix">
                             <div class="form-group flex-block">
-                                <label>Server Path</label>    
+                                <label>Server Path</label>
                                 <input class="form-control" @bind="server.Value.ServerPath" required />
                             </div>
                             <div class="form-group flex-block">
@@ -70,7 +70,7 @@
                         </div>
                         <div class="generator-group flex-justify-spaced flex-margin-fix">
                             <div class="form-group flex-block">
-                                <label>Mods Path</label>   
+                                <label>Mods Path</label>
                                 <input class="form-control" @bind="server.Value.ModsPath" required />
                             </div>
                             <div class="form-group flex-block">
@@ -80,8 +80,8 @@
                         </div>
                         <div class="generator-group flex-justify-spaced flex-margin-fix">
                             <div class="form-group flex-block">
-                                <label>Network Config</label>   
-                                    <input class="form-control" @bind="server.Value.NetworkConfig" required />
+                                <label>Network Config</label>
+                                <input class="form-control" @bind="server.Value.NetworkConfig" required />
                             </div>
                             <div class="form-group flex-block">
                                 <label>BattleEye Path</label>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="generator-group flex-justify-spaced flex-margin-fix">
                             <div class="form-group flex-block">
-                                <label>ExtraArgs</label>  
+                                <label>ExtraArgs</label>
                                 <input class="form-control" @bind="server.Value.ExtraArgs" required />
                             </div>
                             <div class="form-group flex-block">
@@ -98,12 +98,12 @@
                                 <input class="form-control" @bind="server.Value.ServerBranch" required />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                     </div>
                 }
                 <div class="form-group flex-block">
-                    <div class="input-group"> 
-                            <input class="form-control" @bind="newServerName" placeholder="Server Name" required />
+                    <div class="input-group">
+                        <input class="form-control" @bind="newServerName" placeholder="Server Name" required />
                         <div class="input-group-append">
                             <button class="btn btn-warning" @onclick='() => NewServer()'>Create Server</button>
                         </div>
@@ -115,7 +115,7 @@
 </div>
 
 @code {
-    //NAV  -----------------------------------------------------------------------------------
+    //NAV -----------------------------------------------------------------------------------
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

@@ -12,15 +12,14 @@
             {
                 Checked = true;
             }
-            @if(lastfistChar !=  value.Name[0].ToString())
+            @if (lastfistChar != value.Name[0].ToString())
             {
                 lastfistChar = value.Name[0].ToString();
                 <div class="checkboxList-break"></div>
                 <div class="checkboxList-group">@lastfistChar: </div>
             }
             <label class="checkboxList-item @((value.ServerSide? "serverSide" : ""))">
-                <input type="checkbox" checked=@Checked
-            @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }" />
+                <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }" />
                 <span>
                     @value.Name
                     <span class="description">@value.Path</span>

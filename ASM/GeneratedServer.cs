@@ -4,6 +4,6 @@ namespace ASM.Lib
 {
     public class GeneratedServer
     {
-        public Dictionary<string,Template> Templates {get; set;} 
+        public Dictionary<string, Template> Templates { get; set; }
     }
 }

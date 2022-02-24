@@ -35,7 +35,7 @@ namespace ASM.Lib
         }
 
         private void FindMods()
-        {   
+        {
             if (string.IsNullOrEmpty(ModsPath))
                 throw new Exception("NO MODS PATH");
             DirectoryInfo di = new DirectoryInfo(ModsPath);
@@ -44,7 +44,7 @@ namespace ASM.Lib
             {
                 try
                 {
-                    return x.GetFiles().Any(x => x.Name == "mod.cpp" ||  x.Name == "meta.cpp");
+                    return x.GetFiles().Any(x => x.Name == "mod.cpp" || x.Name == "meta.cpp");
                 }
                 catch (System.Exception)
                 {
@@ -61,7 +61,7 @@ namespace ASM.Lib
                 Mods.Add(modData["meta.cpp"]["publishedid"], new Mod
                 {
                     Path = folder.FullName,
-                    Name = GetDisplayName(modData)
+                    Name = GetDisplayName(modData, folder)
                 });
             }
 
@@ -81,7 +81,7 @@ namespace ASM.Lib
                 }
             };
             foreach (var key in cdlc.Keys)
-                if(directories.Any(x => x.Name.ToLower() == key))
+                if (directories.Any(x => x.Name.ToLower() == key))
                 {
                     cdlc[key].Path = directories.First(x => x.Name.ToLower() == key).FullName;
                     Mods.Add(key, cdlc[key]);
@@ -93,7 +93,7 @@ namespace ASM.Lib
         {
             foreach (var mod in Mods)
             {
-               mod.Value.ServerSide = serverSideMods.Contains(mod.Key);
+                mod.Value.ServerSide = serverSideMods.Contains(mod.Key);
             }
         }
 
@@ -112,12 +112,12 @@ namespace ASM.Lib
         private Dictionary<string, Dictionary<string, string>> GetModData(DirectoryInfo folder)
         {
             var modinfo = new Dictionary<string, Dictionary<string, string>>();
-           foreach (var file in folder.GetFiles().Where(x => x.Name == "meta.cpp" || x.Name == "mod.cpp"))
-           {
-               modinfo[file.Name] = GetCPPFile(file.FullName);
-           } 
- 
-           return modinfo;
+            foreach (var file in folder.GetFiles().Where(x => x.Name == "meta.cpp" || x.Name == "mod.cpp"))
+            {
+                modinfo[file.Name] = GetCPPFile(file.FullName);
+            }
+
+            return modinfo;
         }
 
         private Dictionary<string, string> GetCPPFile(string path)
@@ -129,7 +129,7 @@ namespace ASM.Lib
                 if (subStr.Contains("="))
                 {
                     var KeyVal = subStr.Split("=");
-                    if(dict.ContainsKey(KeyVal[0].Trim()))
+                    if (dict.ContainsKey(KeyVal[0].Trim()))
                         continue;
                     dict.Add(KeyVal[0].Trim(), KeyVal[1].Replace("\"", "").Replace(";", "").Trim());
                 }
@@ -137,13 +137,11 @@ namespace ASM.Lib
             return dict;
         }
 
-        private string GetDisplayName(Dictionary<string, Dictionary<string, string>> modData)
+        private string GetDisplayName(Dictionary<string, Dictionary<string, string>> modData, DirectoryInfo folder)
         {
-            if(modData.ContainsKey("mod.cpp") && modData.ContainsKey("meta.cpp"))
-                return  modData["mod.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["mod.cpp"]["name"]) ?  $"- AKA: {modData["meta.cpp"]["name"]}" : "");
-            if(modData.ContainsKey("mod.cpp"))
-                return modData["mod.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["mod.cpp"]["name"]) ?  $"- DUPLICATE" : "");
-            return modData["meta.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["meta.cpp"]["name"]) ?  $"- DUPLICATE" : ""); 
+            if (modData.ContainsKey("meta.cpp") && modData["meta.cpp"].ContainsKey("name"))
+                return modData["meta.cpp"]["name"] + (Mods.Any(x => x.Value.Name == modData["meta.cpp"]["name"]) ? $"-{Mods.Count(x => x.Value.Name == modData["meta.cpp"]["name"])}" : "");
+            throw new Exception($"Mod in {folder.FullName} is missing `name` in meta.cpp file");
         }
     }
 }

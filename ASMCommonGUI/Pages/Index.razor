@@ -7,9 +7,9 @@
     <div class="sidebar">
         <div class="top-row pl-4 navbar navbar-dark">
             <a class="navbar-brand" href=""></a>
-                <button class="navbar-toggler" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <button class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
 
         <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
@@ -24,19 +24,22 @@
                     </select>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-primary form-control" @onclick='() => ASM.RunServer(selectedModIds, activeServer)'>Start Server</button>
+                    <button class="btn btn-primary form-control"
+                        @onclick='() => ASM.RunServer(selectedModIds, activeServer)'>Start Server</button>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-secondary form-control" @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer)'>Run Mods Update</button>
+                    <button class="btn btn-secondary form-control"
+                        @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer)'>Run Mods Update</button>
                 </li>
                 <li class="nav-item px-3">
-                    <button class="btn btn-warning form-control" @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
+                    <button class="btn btn-warning form-control"
+                        @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
                 </li>
                 <li class="nav-item px-3">
-                     <button class="btn btn-danger form-control"
-                    @onclick='() => ToggleServerSide()'>Toggle ServerSide Mod</button>
+                    <button class="btn btn-danger form-control" @onclick='() => ToggleServerSide()'>Toggle ServerSide
+                        Mod</button>
                 </li>
-               
+
             </ul>
         </div>
         <div class="bottom-logo">
@@ -60,10 +63,11 @@
             <div>
                 <div class="generator-group flex-justify-spaced flex-margin-fix">
                     <div class="form-group flex-block">
-                        <div class="input-group"> 
+                        <div class="input-group">
                             <input class="form-control" @bind="templateName" placeholder="Template Name" required />
                             <div class="input-group-append">
-                                <button class="btn btn-warning" @onclick='() => SaveTemplate()' type="button">Save</button>
+                                <button class="btn btn-warning" @onclick='() => SaveTemplate()'
+                                    type="button">Save</button>
                             </div>
                         </div>
                     </div>
@@ -90,27 +94,29 @@
                     <option value=@mission>@mission</option>
                     }
                     </select> *@
-                
-                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds"></CheckBoxModList>
+
+                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds">
+                </CheckBoxModList>
             </div>
         </div>
         @* <div class="form-group flex-block">
             <div class="input-group">
-                <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
-                <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
-                <div class="input-group-append">
-                    <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
-                </div>
+            <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
+            <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
+            <div class="input-group-append">
+            <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName,
+            activeServer)'>Add New Mod</button>
             </div>
-        </div> *@
+            </div>
+            </div> *@
         <div class=bottom-bar>
-            <LoggerAll logs="@ASM.logStream"/>
+            <LoggerAll logs="@ASM.logStream" />
         </div>
     </div>
 </div>
 
 @code {
-    //NAV  -----------------------------------------------------------------------------------
+    //NAV -----------------------------------------------------------------------------------
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
