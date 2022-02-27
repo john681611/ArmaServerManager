@@ -4,7 +4,8 @@
   "Servers": {
     "ID": {
       "MissionsPath": "C:\\Users\\john6\\Documents\\Arma 3 - Other Profiles\\Mike64\\missions",
-      "ServerPath": "C:\\GameServers\\Arma_3_Server",
+      "OptKeysPath": "C:\\Users\\john6\\Documents\\Arma 3 - Other Profiles\\Mike64\\missions",
+      "ServerPath": "D:\\Steam\\steamapps\\common\\Arma 3",
       "ModsPath": "D:\\Steam\\steamapps\\common\\Arma 3\\!Workshop",
       "ConfigPath": "",
       "NetworkConfig": "",

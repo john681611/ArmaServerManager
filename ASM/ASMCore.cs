@@ -40,7 +40,7 @@ namespace ASM.Lib
             Config.SetServerSide();
         }
 
-        public void RunServer(List<string> modIds, string activeServerId, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, mission);
+        public void RunServer(List<string> modIds, string activeServerId, bool ignoreOptionalKeys, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, ignoreOptionalKeys, mission);
         public void RunSteamModsUpdate(List<string> modIds, string activeServerId) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, Config, logStream);
         public void RunSteamModInstall(string modId, string folderName, string activeServerId) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, Config, logStream);
         public void RunSteamServerUpdate(string activeServerId) => BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);

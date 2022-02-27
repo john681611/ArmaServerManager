@@ -25,7 +25,8 @@
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-primary form-control"
-                        @onclick='() => ASM.RunServer(selectedModIds, activeServer, selectedMission)'>Start Server</button>
+                        @onclick='() => ASM.RunServer(selectedModIds, activeServer, IgnoreOptionalKeys, selectedMission)'>Start
+                        Server</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-secondary form-control"
@@ -39,7 +40,18 @@
                     <button class="btn btn-danger form-control" @onclick='() => ToggleServerSide()'>Toggle ServerSide
                         Mod</button>
                 </li>
-
+                @if(!string.IsNullOrEmpty(ASM.Config.Servers[activeServer].OptKeysPath))
+                {
+                    <li class="nav-item px-3">
+                        <label class="checkboxList-item">
+                            <input type="checkbox" checked=@IgnoreOptionalKeys
+                                @onchange="eventArgs => { IgnoreOptionalKeys = !IgnoreOptionalKeys; }" />
+                            <span>
+                                Ignore Optional Keys
+                            </span>
+                        </label>
+                    </li>
+                }
             </ul>
         </div>
         <div class="bottom-logo">
@@ -88,11 +100,11 @@
                 </div>
                 <label>Starting Mission (Overrides Config)</label>
                 <select class="form-control selectpicker" @bind="selectedMission">
-                <option value=>No mission (use provided config)</option>
-                @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
-                {
-                <option value=@mission>@mission</option>
-                }
+                    <option value=>No mission (use provided config)</option>
+                    @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
+                    {
+                        <option value=@mission>@mission</option>
+                    }
                 </select>
 
                 <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds">
@@ -138,6 +150,8 @@
 
     private string newFolderName;
     private string newModSteamId;
+
+    private bool IgnoreOptionalKeys;
 
     private string selectedTemplate = "";
     protected override void OnInitialized()

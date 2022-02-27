@@ -9,7 +9,13 @@ namespace ASM.Lib
     class BatRunner
     {
 
-        public static void RunServer(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream, string mission)
+        public static void RunServer(
+            List<string> modIds,
+            string activeServerId,
+            ASMConfig Config,
+            List<string> logStream,
+            bool ignoreOptionalKeys,
+            string mission)
         {
             var server = Config.Servers[activeServerId];
             var mods = server.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
@@ -27,7 +33,7 @@ namespace ASM.Lib
             {
                 lines.Add($"xcopy \"{keyFolder}\" \"{server.ServerPath}\\keys\" /C /y");
             }
-            if (!string.IsNullOrEmpty(server.OptKeysPath))
+            if (!string.IsNullOrEmpty(server.OptKeysPath) && !ignoreOptionalKeys)
                 lines.Add($"xcopy  \"{server.OptKeysPath}\" \"{server.ServerPath}\\keys\" /C /y");
 
             var config = server.ConfigPath;
