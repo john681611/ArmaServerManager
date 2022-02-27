@@ -57,7 +57,8 @@ namespace ASM.Lib
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
-                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit"
+                $"{Config.SteamPath}\\steamcmd.exe\"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit",
+                $"mklink /D \"{server.ServerPath}\\mods\\{folderName}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\""
             };
             RunBat(lines, logStream);
         }

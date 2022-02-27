@@ -18,8 +18,10 @@
                     <label>Server</label>
                     <select class="form-control selectpicker" @bind="activeServer">
                         @foreach (var template in ASM.Config.Servers)
+
                         {
                             <option value=@template.Key>@template.Key</option>
+
                         }
                     </select>
                 </li>
@@ -40,17 +42,19 @@
                     <button class="btn btn-danger form-control" @onclick='() => ToggleServerSide()'>Toggle ServerSide
                         Mod</button>
                 </li>
-                @if(!string.IsNullOrEmpty(ASM.Config.Servers[activeServer].OptKeysPath))
+                @if (!string.IsNullOrEmpty(ASM.Config.Servers[activeServer].OptKeysPath))
+
                 {
                     <li class="nav-item px-3">
                         <label class="checkboxList-item">
                             <input type="checkbox" checked=@IgnoreOptionalKeys
-                                @onchange="eventArgs => { IgnoreOptionalKeys = !IgnoreOptionalKeys; }" />
+                            @onchange="eventArgs => { IgnoreOptionalKeys = !IgnoreOptionalKeys; }" />
                             <span>
                                 Ignore Optional Keys
                             </span>
                         </label>
                     </li>
+
                 }
             </ul>
         </div>
@@ -88,8 +92,10 @@
                             <select class="form-control selectpicker" @bind="selectedTemplate">
                                 <option value="">New Template</option>
                                 @foreach (var template in ASM.Config.Servers[activeServer].Templates)
+
                                 {
                                     <option value=@template.Key>@template.Key</option>
+
                                 }
                             </select>
                             <div class="input-group-append">
@@ -102,8 +108,10 @@
                 <select class="form-control selectpicker" @bind="selectedMission">
                     <option value=>No mission (use provided config)</option>
                     @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
+
                     {
                         <option value=@mission>@mission</option>
+
                     }
                 </select>
 
@@ -111,16 +119,15 @@
                 </CheckBoxModList>
             </div>
         </div>
-        @* <div class="form-group flex-block">
+        <div class="form-group flex-block">
             <div class="input-group">
-            <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
-            <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
-            <div class="input-group-append">
-            <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName,
-            activeServer)'>Add New Mod</button>
+                <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
+                <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
+                <div class="input-group-append">
+                    button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
+                </div>
             </div>
-            </div>
-            </div> *@
+        </div>
         <div class=bottom-bar>
             <LoggerAll logs="@ASM.logStream" />
         </div>
@@ -128,76 +135,148 @@
 </div>
 
 @code {
+
     //NAV -----------------------------------------------------------------------------------
+
     private bool collapseNavMenu = true;
+
+
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+
+
     private void ToggleNavMenu()
+
     {
+
         collapseNavMenu = !collapseNavMenu;
+
     }
+
+
+
 
 
     // ASM -----------------------------------------------------------------------------------
 
+
+
     private ASMCore ASM;
 
+
+
     private string templateName;
+
     private string activeServer;
+
     private List<string> selectedModIds;
+
     private string selectedMission;
 
+
+
     private string newFolderName;
+
     private string newModSteamId;
+
+
 
     private bool IgnoreOptionalKeys;
 
+
+
     private string selectedTemplate = "";
+
     protected override void OnInitialized()
+
     {
+
         ASM = new ASMCore();
+
         activeServer = ASM.Config.Servers.First().Key;
+
         selectedModIds = new List<string>();
+
     }
+
+
 
     private void ToggleMod(string modId)
+
     {
+
         if (selectedModIds.Contains(modId))
+
             selectedModIds.Remove(modId);
+
         else
+
             selectedModIds.Add(modId);
+
     }
+
+
 
     private void ToggleServerSide()
+
     {
+
         ASM.Config.ToggleServerSide(selectedModIds);
+
         StateHasChanged();
+
     }
+
+
 
     private void SaveTemplate()
+
     {
+
         var template = new Template();
+
         foreach (var modId in selectedModIds)
+
         {
+
             template.Mods.Add(modId, ASM.Config.Servers[activeServer].Mods[modId].Name);
+
         }
+
         ASM.Config.Servers[activeServer].Templates[templateName] = template;
+
         ASM.Config.Save();
+
     }
 
+
+
     private void LoadTemplate()
+
     {
+
         if (!ASM.Config.Servers[activeServer].Templates.ContainsKey(selectedTemplate))
+
         {
+
             templateName = "";
+
             selectedModIds = new List<string>();
+
             return;
+
         }
 
+
+
         var template = ASM.Config.Servers[activeServer].Templates[selectedTemplate];
+
         templateName = selectedTemplate;
+
         selectedModIds = template.Mods.Keys.ToList();
+
         StateHasChanged();
+
     }
 }
