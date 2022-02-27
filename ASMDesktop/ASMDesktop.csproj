@@ -23,6 +23,7 @@
     <Content Include="..\ASMconfig.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\ASMconfigTemplate.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\ASMgenerated.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\ASMMissionTemplate.cfg" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <PropertyGroup>
