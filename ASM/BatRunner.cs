@@ -15,6 +15,12 @@ namespace ASM.Lib
             var mods = server.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
             string modsString = string.Join(";", mods.Where(x => !x.ServerSide).Select(x => x.Path));
             string modsServerString = string.Join(";", mods.Where(x => x.ServerSide).Select(x => x.Path));
+            var di = new DirectoryInfo($"{server.ServerPath}\\keys");
+            foreach (var file in di.GetFiles())
+            {
+                if(file.Name != "a3.bikey")
+                    file.Delete();
+            }
             var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
             var keyFolders = FindKeyFolders(mods);
             foreach (var keyFolder in keyFolders)
