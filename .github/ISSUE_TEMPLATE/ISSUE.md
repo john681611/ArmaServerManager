@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-#### BR Version: x.x.x  DCS Version: x.x.x
+#### ASM Version: x.x.x
 
 ### Brief Description: 
  <!--What happened? -->
@@ -15,8 +15,3 @@ assignees: ''
 
 ### Expected: 
  <!-- What should of happened? -->
-
-
-#### Mission and Template Zip: <!-- Drag and drop a zip of your template (.brt) file and an example mission file (.miz) here. So we can debug-->
-
-Mission modified: Y/N <!--Note if you have significantly modified the mission we may not be able to help you. Please try and get an example right after generation.-->

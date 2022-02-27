@@ -124,7 +124,7 @@
                 <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
                 <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
                 <div class="input-group-append">
-                    button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
+                    <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
                 </div>
             </div>
         </div>
