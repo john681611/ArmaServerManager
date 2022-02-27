@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-primary form-control"
-                        @onclick='() => ASM.RunServer(selectedModIds, activeServer)'>Start Server</button>
+                        @onclick='() => ASM.RunServer(selectedModIds, activeServer, selectedMission)'>Start Server</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-secondary form-control"
@@ -86,14 +86,14 @@
                         </div>
                     </div>
                 </div>
-                @* <label>Starting Mission (Non functional)</label>
-                    <select class="form-control selectpicker" @bind="selectedMission">
-                    <option value=>No mission (use provided config)</option>
-                    @foreach (var mission in ASM.Config.Missions)
-                    {
-                    <option value=@mission>@mission</option>
-                    }
-                    </select> *@
+                <label>Starting Mission (Overrides Config)</label>
+                <select class="form-control selectpicker" @bind="selectedMission">
+                <option value=>No mission (use provided config)</option>
+                @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
+                {
+                <option value=@mission>@mission</option>
+                }
+                </select>
 
                 <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds">
                 </CheckBoxModList>

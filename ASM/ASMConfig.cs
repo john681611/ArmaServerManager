@@ -17,15 +17,9 @@ namespace ASM.Lib
         [JsonIgnore]
         internal string filePath { get; set; }
 
-        public static ASMConfig Load(string path = "")
+        public static ASMConfig Load()
         {
-            if (string.IsNullOrEmpty(path))
-                path = AppDomain.CurrentDomain.BaseDirectory;
-            path = Path.GetFullPath(path);
-            DirectoryInfo di = new DirectoryInfo(path);
-            if (!di.GetFiles().Any(x => x.Name == "ASMconfig.json"))
-                return Load(path + "/..");
-            path = $"{path}/ASMconfig.json";
+            var path = ASMCore.FindFile("ASMconfig.json");
             using var streamReader = new StreamReader(path);
             string json = streamReader.ReadToEnd();
             var config = JsonConvert.DeserializeObject<ASMConfig>(json);

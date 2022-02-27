@@ -9,7 +9,7 @@ namespace ASM.Lib
     class BatRunner
     {
 
-        public static void RunServer(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
+        public static void RunServer(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream, string mission)
         {
             var server = Config.Servers[activeServerId];
             var mods = server.Mods.Where(x => modIds.Contains(x.Key)).Select(x => x.Value).ToList();
@@ -23,7 +23,11 @@ namespace ASM.Lib
             }
             if (!string.IsNullOrEmpty(server.OptKeysPath))
                 lines.Add($"xcopy  \"{server.OptKeysPath}\" \"{server.ServerPath}\\keys\" /C /y");
-            lines.Add($"start {server.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={server.ConfigPath} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
+
+            var config = server.ConfigPath;
+            if (!string.IsNullOrEmpty(mission))
+                config = SetupMissionConfig(mission);
+            lines.Add($"start {server.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={config} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
             RunBat(lines, logStream);
         }
 
@@ -84,6 +88,20 @@ namespace ASM.Lib
                     modFolders.Add(directories.First(x => x.Name.ToLower().Contains("key")).FullName);
             }
             return modFolders;
+        }
+
+        private static string SetupMissionConfig(string mission)
+        {
+            var templateFile = "ASMMissionTemplate.cfg";
+            var path = ASMCore.FindFile("ASMMissionTemplate.cfg");
+
+            using var streamReader = new StreamReader(path);
+            string configTemplate = streamReader.ReadToEnd();
+            configTemplate = configTemplate.Replace("$TEMPLATE$", mission);
+
+            var filePath = path.Replace(templateFile, "ASMMissionGenerated.cfg");
+            File.WriteAllText(filePath, configTemplate);
+            return filePath;
         }
     }
 }

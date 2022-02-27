@@ -19,13 +19,16 @@ along with Briefing Room for DCS World. If not, see https://www.gnu.org/licenses
 */
 
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ASM.Lib
 {
     public sealed class ASMCore
     {
-        public const string VERSION = "0.0.7";
+        public const string VERSION = "0.0.8";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
         public List<string> logStream { get; set; } = new List<string>();
@@ -37,9 +40,20 @@ namespace ASM.Lib
             Config.SetServerSide();
         }
 
-        public void RunServer(List<string> modIds, string activeServerId) => BatRunner.RunServer(modIds, activeServerId, Config, logStream);
+        public void RunServer(List<string> modIds, string activeServerId, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, mission);
         public void RunSteamModsUpdate(List<string> modIds, string activeServerId) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, Config, logStream);
         public void RunSteamModInstall(string modId, string folderName, string activeServerId) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, Config, logStream);
         public void RunSteamServerUpdate(string activeServerId) => BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
+
+        public static string FindFile(string fileName, string path = "")
+        {
+            if (string.IsNullOrEmpty(path))
+                path = AppDomain.CurrentDomain.BaseDirectory;
+            path = Path.GetFullPath(path);
+            var di = new DirectoryInfo(path);
+            if (!di.GetFiles().Any(x => x.Name == fileName))
+                return FindFile(fileName, path + "/..");
+            return $"{path}/{fileName}";
+        }
     }
 }
