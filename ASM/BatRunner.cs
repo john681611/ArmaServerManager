@@ -107,12 +107,13 @@ namespace ASM.Lib
         {
             var templateFile = "ASMMissionTemplate.cfg";
             var path = ASMCore.FindFile("ASMMissionTemplate.cfg");
-
+            Console.WriteLine(path);
             using var streamReader = new StreamReader(path);
             string configTemplate = streamReader.ReadToEnd();
             configTemplate = configTemplate.Replace("$TEMPLATE$", mission);
 
             var filePath = path.Replace(templateFile, "ASMMissionGenerated.cfg");
+            Console.WriteLine(filePath);
             File.WriteAllText(filePath, configTemplate);
             return filePath;
         }
