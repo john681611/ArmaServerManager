@@ -53,7 +53,7 @@ namespace ASM.Lib
             var di = new DirectoryInfo(path);
             if (!di.GetFiles().Any(x => x.Name == fileName))
                 return FindFile(fileName, path + "\\..");
-            return $"{path}\\{fileName}";
+            return di.GetFiles().First(x => x.Name == fileName).FullName;
         }
     }
 }
