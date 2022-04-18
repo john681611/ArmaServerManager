@@ -74,6 +74,9 @@ namespace ASM.Lib
 
         private static async void RunBat(List<string> lines, List<string> logStream)
         {
+            logStream.Add("------Running .bat script------");
+            logStream.AddRange(lines);
+            logStream.Add("------------------------------");
             string tempFilename = Path.ChangeExtension(Path.GetTempFileName(), ".bat");
             using (StreamWriter writer = new StreamWriter(tempFilename))
             {
