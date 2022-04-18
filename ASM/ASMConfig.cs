@@ -57,7 +57,7 @@ namespace ASM.Lib
 
         private static ASMConfig LoadGenerated(string path, ASMConfig config)
         {
-            using var streamReader = new StreamReader(path.Replace("ASMconfig", "ASMgenerated"));
+            using var streamReader = new StreamReader(path.Replace("ASMconfig", "ASMTemplates"));
             string json = streamReader.ReadToEnd();
             var generatedServers = JsonConvert.DeserializeObject<Dictionary<string, GeneratedServer>>(json);
             foreach (var server in generatedServers)
@@ -83,7 +83,7 @@ namespace ASM.Lib
                 generatedServers.Add(server.Key, server.Value.GetGeneratedServer());
             }
             var json = JsonConvert.SerializeObject(generatedServers, formatting: Formatting.Indented);
-            File.WriteAllText(filePath.Replace("ASMconfig", "ASMgenerated"), json);
+            File.WriteAllText(filePath.Replace("ASMconfig", "ASMTemplates"), json);
         }
     }
 }

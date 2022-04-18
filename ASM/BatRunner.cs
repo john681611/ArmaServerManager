@@ -105,14 +105,13 @@ namespace ASM.Lib
 
         private static string SetupMissionConfig(string mission)
         {
-            var templateFile = "ASMMissionTemplate.cfg";
+            var templateFile = "ASMMission.cfg";
             var path = ASMCore.FindFile(templateFile);
-            Console.WriteLine(path);
             using var streamReader = new StreamReader(path);
             string configTemplate = streamReader.ReadToEnd();
             configTemplate = configTemplate.Replace("$TEMPLATE$", mission.Replace(".pbo", ""));
 
-            var filePath = path.Replace(templateFile, "ASMMissionGenerated.cfg");
+            var filePath = Path.ChangeExtension(Path.GetTempFileName(), ".cfg");
             File.WriteAllText(filePath, configTemplate);
             return filePath;
         }
