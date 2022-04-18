@@ -108,10 +108,8 @@
                 <select class="form-control selectpicker" @bind="selectedMission">
                     <option value=>No mission (use provided config)</option>
                     @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
-
                     {
-                        <option value=@mission>@mission</option>
-
+                        <option value=@mission>@mission.Replace(".pbo", "")</option>
                     }
                 </select>
 

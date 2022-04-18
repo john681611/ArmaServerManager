@@ -28,7 +28,7 @@ namespace ASM.Lib
 {
     public sealed class ASMCore
     {
-        public const string VERSION = "0.0.9";
+        public const string VERSION = "0.0.10";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
         public List<string> logStream { get; set; } = new List<string>();
@@ -52,7 +52,7 @@ namespace ASM.Lib
             path = Path.GetFullPath(path);
             var di = new DirectoryInfo(path);
             if (!di.GetFiles().Any(x => x.Name == fileName))
-                return FindFile(fileName, path + "\\..");
+                return FindFile(fileName, path + @"\..");
             return di.GetFiles().First(x => x.Name == fileName).FullName;
         }
     }

@@ -110,7 +110,7 @@ namespace ASM.Lib
             Console.WriteLine(path);
             using var streamReader = new StreamReader(path);
             string configTemplate = streamReader.ReadToEnd();
-            configTemplate = configTemplate.Replace("$TEMPLATE$", mission);
+            configTemplate = configTemplate.Replace("$TEMPLATE$", mission.Replace(".pbo", ""));
 
             var filePath = path.Replace(templateFile, "ASMMissionGenerated.cfg");
             File.WriteAllText(filePath, configTemplate);
