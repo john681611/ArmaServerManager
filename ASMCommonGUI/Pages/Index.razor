@@ -78,31 +78,38 @@
         <div class="content px-4">
             <div>
                 <div class="generator-group flex-justify-spaced flex-margin-fix">
-                    <div class="form-group flex-block">
-                        <div class="input-group">
-                            <input class="form-control" @bind="templateName" placeholder="Template Name" required />
-                            <div class="input-group-append">
-                                <button class="btn btn-warning" @onclick='() => SaveTemplate()'
-                                    type="button">Save</button>
+                    @if(showSaveModal) {
+                        <div class="form-group flex-block save-modal">
+                            <div class="input-group">
+                                <input class="form-control" @bind="templateName" placeholder="Template Name" required />
+                            </div>
+                            <div class="flex-justify-spaced flex-margin-fix">
+                                <button class="btn btn-warning" @onclick='() => SaveTemplate()'type="button">Save</button>
+                                <button class="btn btn-warning" @onclick='() => showSaveModal = false'type="button">Cancel</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group flex-block">
-                        <div class="input-group">
-                            <select class="form-control selectpicker" @bind="selectedTemplate">
-                                <option value="">New Template</option>
-                                @foreach (var template in ASM.Config.Servers[activeServer].Templates)
+                    } else {
+                        <div class="form-group flex-block">
+                            <div class="input-group">
+                                <select class="form-control selectpicker" @bind="selectedTemplate">
+                                    <option value="">No Template</option>
+                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates)
 
-                                {
-                                    <option value=@template.Key>@template.Key</option>
+                                    {
+                                        <option value=@template.Key>@template.Key</option>
 
-                                }
-                            </select>
-                            <div class="input-group-append">
-                                <button class="btn btn-warning" @onclick='() => LoadTemplate()'>Load</button>
+                                    }
+                                </select>
+                                
+                                <div class="input-group-append">
+                                    @if(!string.IsNullOrEmpty(selectedTemplate)){
+                                        <button class="btn btn-warning" @onclick='() => SaveTemplate()'type="button">Save</button>
+                                    }
+                                    <button class="btn btn-warning" @onclick='() => GetTemplateNameTemplate()'type="button">Save As..</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <label>Starting Mission (Overrides Config)</label>
                 <select class="form-control selectpicker" @bind="selectedMission">
@@ -183,8 +190,21 @@
     private bool IgnoreOptionalKeys;
 
 
+    private bool showSaveModal = false;
 
-    private string selectedTemplate = "";
+
+    private string _selectedTemplate = "";
+    private string selectedTemplate {
+        get
+        {
+        return _selectedTemplate;
+        }
+        set
+        {
+        _selectedTemplate = value;
+        LoadTemplate();
+        }
+    }
 
     protected override void OnInitialized()
 
@@ -226,6 +246,11 @@
 
     }
 
+    private void GetTemplateNameTemplate()
+    {
+        showSaveModal = true;
+    }
+
 
 
     private void SaveTemplate()
@@ -245,6 +270,7 @@
         ASM.Config.Servers[activeServer].Templates[templateName] = template;
 
         ASM.Config.Save();
+        showSaveModal = false;
 
     }
 
