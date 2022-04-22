@@ -1,4 +1,4 @@
-![ASM logo](../ASMCommonGUI/wwwroot/img/ASM_black.png)
+![ASM logo](ASM_black.png)
 
 # ArmA Server Manager
 
