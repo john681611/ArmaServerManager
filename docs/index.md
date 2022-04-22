@@ -1,4 +1,4 @@
-![ASM logo](ASMCommonGUI/wwwroot/img/ASM_White.png)
+![ASM logo](../ASMCommonGUI/wwwroot/img/ASM_black.png)
 
 # ArmA Server Manager
 
@@ -19,7 +19,6 @@ ASM is a app for managing your ArmA dedicated servers, Its able to manage multip
 * Install/Update mods.
 * Update Servers.
 * Manage Multiple servers at once
-
 
 
 ### Additional information
