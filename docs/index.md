@@ -1,4 +1,4 @@
-![ASM logo](ASM_black.png)
+![ASM logo](https://github.com/john681611/ArmaServerManager/blob/master/ASMCommonGUI/wwwroot/img/ASM_Black.png?raw=true)
 
 # ArmA Server Manager
 
