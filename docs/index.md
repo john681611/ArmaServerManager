@@ -1,37 +1,28 @@
-## Welcome to GitHub Pages
+![ASM logo](ASMCommonGUI/wwwroot/img/ASM_White.png)
 
-You can use the [editor on GitHub](https://github.com/john681611/ArmaServerManager/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+# ArmA Server Manager
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+----
+## Installation
+ App is generally standalone .exe with caveats on desktop:
+ 1. Desktop version requires [WebView2 Runtime](https://go.microsoft.com/fwlink/p/?LinkId=2124703) this may not be installed on windows by default. If Web Exe works and Desktop doesn't this is likely the issue.
+ 1. Desktop won't run if placed within `Program Files` or `Program Files (x86)` (Its a Microsoft issue not us :D)
 
-### Markdown
+## What is ArmA Server Manager (ASM)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+ASM is a app for managing your ArmA dedicated servers, Its able to manage multiple servers at once, allowing you to install/update mods as well as update servers themselves. It allows you to manage mods just like the ArmA 3 Client Launcher  
 
-```markdown
-Syntax highlighted code block
+### Features summary
 
-# Header 1
-## Header 2
-### Header 3
+* Launch Servers with mods (normal and server side).
+* Auto Manage Server Keys.
+* Install/Update mods.
+* Update Servers.
+* Manage Multiple servers at once
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
+### Additional information
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/john681611/ArmaServerManager/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+* Based on tech developed in BriefingRoom by Ambroise Garel (@akaAgar), maintained by John Harvey (@john681611)
+* Released under the [GNU General Public License 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
