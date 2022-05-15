@@ -88,6 +88,15 @@
                                 <button class="btn btn-warning" @onclick='() => showSaveModal = false'type="button">Cancel</button>
                             </div>
                         </div>
+                    } else if (showDeleteModal){
+                        <div class="form-group flex-block save-modal">
+                            <p>Sure you want to delete @selectedTemplate?</p>
+                            <div class="flex-justify-spaced flex-margin-fix">
+                                <button class="btn btn-warning" @onclick='() => DeleteTemplate()'type="button">Yes</button>
+                                <button class="btn btn-warning" @onclick='() => showDeleteModal = false'type="button">Cancel</button>
+                            </div>
+                        </div>
+                    
                     } else {
                         <div class="form-group flex-block">
                             <div class="input-group">
@@ -104,6 +113,7 @@
                                 <div class="input-group-append">
                                     @if(!string.IsNullOrEmpty(selectedTemplate)){
                                         <button class="btn btn-warning" @onclick='() => SaveTemplate()'type="button">Save</button>
+                                        <button class="btn btn-danger" @onclick='() => showDeleteModal = true'type="button">Delete</button>
                                     }
                                     <button class="btn btn-warning" @onclick='() => GetTemplateNameTemplate()'type="button">Save As..</button>
                                 </div>
@@ -111,9 +121,9 @@
                         </div>
                     }
                 </div>
-                <label>Starting Mission (Overrides Config)</label>
+                <label>Starting Mission (Overrides Config: @ASM.Config.Servers[activeServer].TemplateConfigPath)</label>
                 <select class="form-control selectpicker" @bind="selectedMission">
-                    <option value=>No mission (use provided config)</option>
+                    <option value=>No mission (config: @ASM.Config.Servers[activeServer].ConfigPath)</option>
                     @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
                     {
                         <option value=@mission>@mission.Replace(".pbo", "")</option>
@@ -191,6 +201,8 @@
 
 
     private bool showSaveModal = false;
+
+    private bool showDeleteModal = false;
 
 
     private string _selectedTemplate = "";
@@ -272,6 +284,15 @@
         ASM.Config.Save();
         showSaveModal = false;
 
+    }
+
+
+    private void DeleteTemplate()
+    {
+        ASM.Config.Servers[activeServer].Templates.Remove(_selectedTemplate);
+        ASM.Config.Save();
+        showDeleteModal = false;
+        selectedTemplate = "";
     }
 
 
