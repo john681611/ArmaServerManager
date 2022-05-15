@@ -28,7 +28,7 @@ namespace ASM.Lib
 {
     public sealed class ASMCore
     {
-        public const string VERSION = "0.0.10";
+        public const string VERSION = "0.0.11";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
         public List<string> logStream { get; set; } = new List<string>();
