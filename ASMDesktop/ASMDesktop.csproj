@@ -21,9 +21,7 @@
   <ItemGroup>
     <Content Include="Resources\**" LinkBase="Resources" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\ASMconfig.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="..\ASMconfigTemplate.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="..\ASMgenerated.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="..\ASMMissionTemplate.cfg" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\ASMTemplates.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <PropertyGroup>
