@@ -78,6 +78,9 @@ namespace ASM.Lib
                 },
                 {"vn", new Mod{
                     Name=" S.O.G PF"}
+                },
+                {"contact", new Mod{
+                    Name=" Contact"}
                 }
             };
             foreach (var key in cdlc.Keys)
