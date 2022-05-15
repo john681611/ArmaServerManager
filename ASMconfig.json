@@ -8,6 +8,7 @@
       "ServerPath": "D:\\Steam\\steamapps\\common\\Arma 3",
       "ModsPath": "D:\\Steam\\steamapps\\common\\Arma 3\\!Workshop",
       "ConfigPath": "",
+      "TemplateConfigPath": "",
       "NetworkConfig": "",
       "BattleEyePath": "",
       "ExtraArgs": "-port=2302 -profiles=Server -name=Server -filePatching -enableHT -loadMissionToMemory -hugepages -limitFPS=62",

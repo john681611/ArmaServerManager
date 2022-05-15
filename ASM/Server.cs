@@ -13,6 +13,7 @@ namespace ASM.Lib
         public string ServerPath { get; set; }
         public string ModsPath { get; set; }
         public string ConfigPath { get; set; }
+        public string TemplateConfigPath { get; set; }
         public string NetworkConfig { get; set; }
         public string BattleEyePath { get; set; }
         public string ExtraArgs { get; set; }

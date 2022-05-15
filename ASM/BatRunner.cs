@@ -38,7 +38,7 @@ namespace ASM.Lib
 
             var config = server.ConfigPath;
             if (!string.IsNullOrEmpty(mission))
-                config = SetupMissionConfig(mission);
+                config = SetupMissionConfig(mission, server.TemplateConfigPath);
             lines.Add($"start {server.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={config} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
             RunBat(lines, logStream);
         }
@@ -106,10 +106,9 @@ namespace ASM.Lib
             return modFolders;
         }
 
-        private static string SetupMissionConfig(string mission)
+        private static string SetupMissionConfig(string mission, string templateFilePath)
         {
-            var templateFile = "ASMMission.cfg";
-            var path = ASMCore.FindFile(templateFile);
+            var path = string.IsNullOrEmpty(templateFilePath) ? ASMCore.FindFile("ASMMission.cfg") : templateFilePath;
             using var streamReader = new StreamReader(path);
             string configTemplate = streamReader.ReadToEnd();
             configTemplate = configTemplate.Replace("$TEMPLATE$", mission.Replace(".pbo", ""));
