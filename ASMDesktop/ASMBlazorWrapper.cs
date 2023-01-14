@@ -16,6 +16,7 @@ namespace ASM.GUI.Desktop
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
+            serviceCollection.AddWindowsFormsBlazorWebView();
             serviceCollection.AddBlazoredLocalStorage();
             var blazor = new BlazorWebView()
             {
