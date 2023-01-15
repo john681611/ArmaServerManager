@@ -11,6 +11,7 @@ namespace ASM.Lib
         public string SteamPath { get; set; }
         public string SteamLogin { get; set; }
         public Dictionary<string, Server> Servers { get; set; }
+        public string PBOMinify { get; set; }
 
         public List<string> ServerSideMods { get; set; } = new List<string>();
 

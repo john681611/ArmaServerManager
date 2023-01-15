@@ -18,6 +18,7 @@ namespace ASM.Lib
         public string BattleEyePath { get; set; }
         public string ExtraArgs { get; set; }
         public string ServerBranch { get; set; }
+        public string ClientBranch { get; set; }
         [JsonIgnore]
         public Dictionary<string, Mod> Mods { get; set; } = new Dictionary<string, Mod>();
         [JsonIgnore]

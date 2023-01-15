@@ -24,7 +24,7 @@ namespace ASM.Lib
             var di = new DirectoryInfo($"{server.ServerPath}\\keys");
             foreach (var file in di.GetFiles())
             {
-                if(file.Name != "a3.bikey")
+                if (file.Name != "a3.bikey")
                     file.Delete();
             }
             var lines = new List<string> { $"del /q {server.ServerPath}\\keys\\*.*" };
@@ -49,7 +49,8 @@ namespace ASM.Lib
             var lines = new List<string>();
             foreach (var modId in modIds)
             {
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit");
+                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" {modId} validate +quit");
+                AddMinifyLines(Config, server, ref lines, modId);
             }
             RunBat(lines, logStream);
         }
@@ -57,9 +58,10 @@ namespace ASM.Lib
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
-                $"{Config.SteamPath}\\steamcmd.exe\"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ServerBranch}\" {modId} validate +quit",
+                $"{Config.SteamPath}\\steamcmd.exe\"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" {modId} validate +quit",
                 $"mklink /D \"{server.ServerPath}\\mods\\{folderName}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\""
             };
+            AddMinifyLines(Config, server, ref lines, modId);
             RunBat(lines, logStream);
         }
 
@@ -83,7 +85,6 @@ namespace ASM.Lib
                 foreach (var line in lines)
                 {
                     writer.WriteLine(line);
-
                 }
                 writer.WriteLine("exit");
             }
@@ -117,5 +118,17 @@ namespace ASM.Lib
             File.WriteAllText(filePath, configTemplate);
             return filePath;
         }
+
+        private static void AddMinifyLines(ASMConfig Config, Server server, ref List<string> lines, string modId)
+        {
+            if (!string.IsNullOrEmpty(Config.PBOMinify))
+            {
+                lines.Add($"""
+                    {Config.PBOMinify}\pbo_minify.exe "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons" "{Config.PBOMinify}\Addons"
+                    copy /Y "{Config.PBOMinify}\Addons\*.*" "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons"
+                    del /s /q "{Config.PBOMinify}\Addons\*.*"
+                """);
+            }
+        } 
     }
 }

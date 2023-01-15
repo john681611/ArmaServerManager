@@ -1,6 +1,7 @@
 {
   "SteamPath": "",
   "SteamLogin": "",
+  "PBOMinify": "",
   "Servers": {
     "ID": {
       "MissionsPath": "C:\\Users\\john6\\Documents\\Arma 3 - Other Profiles\\Mike64\\missions",
@@ -12,7 +13,8 @@
       "NetworkConfig": "",
       "BattleEyePath": "",
       "ExtraArgs": "-port=2302 -profiles=Server -name=Server -filePatching -enableHT -loadMissionToMemory -hugepages -limitFPS=62",
-      "ServerBranch": ""
+      "ServerBranch": "",
+      "ClientBranch": ""
     }
   },
   "ServerSideMods": []
