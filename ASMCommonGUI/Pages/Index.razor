@@ -102,11 +102,10 @@
                             <div class="input-group">
                                 <select class="form-control selectpicker" @bind="selectedTemplate">
                                     <option value="">No Template</option>
-                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates)
+                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates.OrderBy(x => x.Key).ToList())
 
                                     {
                                         <option value=@template.Key>@template.Key</option>
-
                                     }
                                 </select>
                                 
@@ -124,7 +123,7 @@
                 <label>Starting Mission (Overrides Config: @ASM.Config.Servers[activeServer].TemplateConfigPath)</label>
                 <select class="form-control selectpicker" @bind="selectedMission">
                     <option value=>No mission (config: @ASM.Config.Servers[activeServer].ConfigPath)</option>
-                    @foreach (var mission in ASM.Config.Servers[activeServer].Missions)
+                    @foreach (var mission in ASM.Config.Servers[activeServer].Missions.Order())
                     {
                         <option value=@mission>@mission.Replace(".pbo", "")</option>
                     }
