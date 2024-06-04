@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace ASM.Lib
@@ -12,8 +10,6 @@ namespace ASM.Lib
         public string SteamLogin { get; set; }
         public Dictionary<string, Server> Servers { get; set; }
         public string PBOMinify { get; set; }
-
-        public List<string> ServerSideMods { get; set; } = new List<string>();
 
         [JsonIgnore]
         internal string filePath { get; set; }
@@ -33,27 +29,6 @@ namespace ASM.Lib
             }
             return config;
 
-        }
-
-        public void SetServerSide()
-        {
-            foreach (var server in Servers)
-            {
-                server.Value.SetServerSide(ServerSideMods);
-            }
-        }
-
-        public void ToggleServerSide(List<string> modIds)
-        {
-            foreach (var modId in modIds)
-            {
-                if (ServerSideMods.Contains(modId))
-                    ServerSideMods.Remove(modId);
-                else
-                    ServerSideMods.Add(modId);
-            }
-            SetServerSide();
-            Save();
         }
 
         private static ASMConfig LoadGenerated(string path, ASMConfig config)

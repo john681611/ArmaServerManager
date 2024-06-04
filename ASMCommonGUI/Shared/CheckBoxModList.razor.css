@@ -49,13 +49,15 @@
     height: 0;
   }
 
-.serverSide > span {
+
+.serverSide > span, .description > button {
     border-color: crimson;
 }
 
-.serverSide > input:checked + span {
+.serverSide > input:checked + span, .serverSide > input + span > span > button {
     background-color: crimson;
     border-color: crimson;
+    color: white;
 }
 
 

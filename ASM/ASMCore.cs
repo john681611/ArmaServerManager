@@ -37,7 +37,6 @@ namespace ASM.Lib
         public ASMCore()
         {
             Config = ASMConfig.Load();
-            Config.SetServerSide();
         }
 
         public void RunServer(List<string> modIds, string activeServerId, bool ignoreOptionalKeys, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, ignoreOptionalKeys, mission);

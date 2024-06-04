@@ -38,17 +38,13 @@
                     <button class="btn btn-warning form-control"
                         @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
                 </li>
-                <li class="nav-item px-3">
-                    <button class="btn btn-danger form-control" @onclick='() => ToggleServerSide()'>Toggle ServerSide
-                        Mod</button>
-                </li>
                 @if (!string.IsNullOrEmpty(ASM.Config.Servers[activeServer].OptKeysPath))
 
                 {
                     <li class="nav-item px-3">
                         <label class="checkboxList-item">
                             <input type="checkbox" checked=@IgnoreOptionalKeys
-                            @onchange="eventArgs => { IgnoreOptionalKeys = !IgnoreOptionalKeys; }" />
+                                @onchange="eventArgs => { IgnoreOptionalKeys = !IgnoreOptionalKeys; }" />
                             <span>
                                 Ignore Optional Keys
                             </span>
@@ -78,43 +74,55 @@
         <div class="content px-4">
             <div>
                 <div class="generator-group flex-justify-spaced flex-margin-fix">
-                    @if(showSaveModal) {
+                    @if (showSaveModal)
+                    {
                         <div class="form-group flex-block save-modal">
                             <div class="input-group">
                                 <input class="form-control" @bind="templateName" placeholder="Template Name" required />
                             </div>
                             <div class="flex-justify-spaced flex-margin-fix">
-                                <button class="btn btn-warning" @onclick='() => SaveTemplate()'type="button">Save</button>
-                                <button class="btn btn-warning" @onclick='() => showSaveModal = false'type="button">Cancel</button>
+                                <button class="btn btn-warning" @onclick='() => SaveTemplate()' type="button">Save</button>
+                                <button class="btn btn-warning" @onclick='() => showSaveModal = false'
+                                    type="button">Cancel</button>
                             </div>
                         </div>
-                    } else if (showDeleteModal){
+                    }
+                    else if (showDeleteModal)
+                    {
                         <div class="form-group flex-block save-modal">
                             <p>Sure you want to delete @selectedTemplate?</p>
                             <div class="flex-justify-spaced flex-margin-fix">
-                                <button class="btn btn-warning" @onclick='() => DeleteTemplate()'type="button">Yes</button>
-                                <button class="btn btn-warning" @onclick='() => showDeleteModal = false'type="button">Cancel</button>
+                                <button class="btn btn-warning" @onclick='() => DeleteTemplate()' type="button">Yes</button>
+                                <button class="btn btn-warning" @onclick='() => showDeleteModal = false'
+                                    type="button">Cancel</button>
                             </div>
                         </div>
-                    
-                    } else {
+
+                    }
+                    else
+                    {
                         <div class="form-group flex-block">
                             <div class="input-group">
                                 <select class="form-control selectpicker" @bind="selectedTemplate">
                                     <option value="">No Template</option>
-                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates.OrderBy(x => x.Key).ToList())
+                                    @foreach (var template in ASM.Config.Servers[activeServer].Templates.OrderBy(x =>
+                                   x.Key).ToList())
 
                                     {
                                         <option value=@template.Key>@template.Key</option>
                                     }
                                 </select>
-                                
+
                                 <div class="input-group-append">
-                                    @if(!string.IsNullOrEmpty(selectedTemplate)){
-                                        <button class="btn btn-warning" @onclick='() => SaveTemplate()'type="button">Save</button>
-                                        <button class="btn btn-danger" @onclick='() => showDeleteModal = true'type="button">Delete</button>
+                                    @if (!string.IsNullOrEmpty(selectedTemplate))
+                                    {
+                                        <button class="btn btn-warning" @onclick='() => SaveTemplate()'
+                                            type="button">Save</button>
+                                        <button class="btn btn-danger" @onclick='() => showDeleteModal = true'
+                                            type="button">Delete</button>
                                     }
-                                    <button class="btn btn-warning" @onclick='() => GetTemplateNameTemplate()'type="button">Save As..</button>
+                                    <button class="btn btn-warning" @onclick='() => GetTemplateNameTemplate()'
+                                        type="button">Save As..</button>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +137,7 @@
                     }
                 </select>
 
-                <CheckBoxModList Data="ASM.Config.Servers[activeServer].Mods" SelectedValues="selectedModIds">
+                <CheckBoxModList Server="ASM.Config.Servers[activeServer]" Config="ASM.Config" SelectedValues="selectedModIds">
                 </CheckBoxModList>
             </div>
         </div>
@@ -138,7 +146,9 @@
                 <input class="form-control" @bind="newFolderName" placeholder="Mod Folder Name" required />
                 <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
                 <div class="input-group-append">
-                    <button class="btn btn-warning" @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New Mod</button>
+                    <button class="btn btn-warning"
+                        @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New
+                        Mod</button>
                 </div>
             </div>
         </div>
@@ -178,8 +188,6 @@
 
     private ASMCore ASM;
 
-
-
     private string templateName;
 
     private string activeServer;
@@ -187,8 +195,6 @@
     private List<string> selectedModIds;
 
     private string selectedMission;
-
-
 
     private string newFolderName;
 
@@ -205,15 +211,16 @@
 
 
     private string _selectedTemplate = "";
-    private string selectedTemplate {
+    private string selectedTemplate
+    {
         get
         {
-        return _selectedTemplate;
+            return _selectedTemplate;
         }
         set
         {
-        _selectedTemplate = value;
-        LoadTemplate();
+            _selectedTemplate = value;
+            LoadTemplate();
         }
     }
 
@@ -242,18 +249,6 @@
         else
 
             selectedModIds.Add(modId);
-
-    }
-
-
-
-    private void ToggleServerSide()
-
-    {
-
-        ASM.Config.ToggleServerSide(selectedModIds);
-
-        StateHasChanged();
 
     }
 

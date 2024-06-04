@@ -1,9 +1,9 @@
 @using Lib
 <div style=@Style class="checkboxList">
-    @if (Data != null)
+    @if (Server != null)
     {
         var lastfistChar = "";
-        foreach (var item in Data.OrderBy(x => x.Value.Name))
+        foreach (var item in Server.Mods.OrderBy(x => x.Value.Name))
         {
             var key = item.Key;
             var value = item.Value;
@@ -19,10 +19,12 @@
                 <div class="checkboxList-group">@lastfistChar: </div>
             }
             <label class="checkboxList-item @((value.ServerSide? "serverSide" : ""))">
-                <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }" />
+                <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }"  />
                 <span>
                     @value.Name
-                    <span class="description">@value.Path</span>
+                    <span class="description">
+                        <button @onclick="eventArgs => { CheckboxContext(key); }">Toggle Server Side</button>
+                        @value.Path</span>
                 </span>
             </label>
         }
@@ -31,14 +33,10 @@
 </div>
 
 @code {
-    //Data for the Checkbox
-    [Parameter] public Dictionary<string, Mod> Data { get; set; }
-    // The field to be shown adjacent to checkbox
-    // CSS Style for the Checkbox container
+    [Parameter] public ASMConfig Config { get; set; }
+    [Parameter] public Server Server { get; set; }
     [Parameter] public string Style { get; set; }
-    // Any childd content for the control (if needed)
     [Parameter] public RenderFragment ChildContent { get; set; }
-    // The array which contains the list of selected checkboxs
     [Parameter] public List<string> SelectedValues { get; set; }
 
     //Method to update the selected value on click on checkbox
@@ -58,6 +56,13 @@
                 SelectedValues.Remove(aSelectedId);
             }
         }
+        StateHasChanged();
+    }
+
+    public void CheckboxContext(string aSelectedId) {
+        var mod  = Server.Mods[aSelectedId];
+        mod.ServerSide = !mod.ServerSide;
+        Server.SaveServerSideMods(Config);
         StateHasChanged();
     }
 }

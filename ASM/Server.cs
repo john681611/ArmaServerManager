@@ -19,6 +19,8 @@ namespace ASM.Lib
         public string ExtraArgs { get; set; }
         public string ServerBranch { get; set; }
         public string ClientBranch { get; set; }
+        public List<string> ServerSideMods { get; set; } = new List<string>();
+
         [JsonIgnore]
         public Dictionary<string, Mod> Mods { get; set; } = new Dictionary<string, Mod>();
         [JsonIgnore]
@@ -57,13 +59,14 @@ namespace ASM.Lib
             foreach (var folder in modFolders)
             {
                 var modData = GetModData(folder);
-
-                if (Mods.ContainsKey(modData["meta.cpp"]["publishedid"]))
+                var id = modData["meta.cpp"]["publishedid"];
+                if (Mods.ContainsKey(id))
                     continue;
-                Mods.Add(modData["meta.cpp"]["publishedid"], new Mod
+                Mods.Add(id, new Mod
                 {
                     Path = folder.FullName,
-                    Name = GetDisplayName(modData, folder)
+                    Name = GetDisplayName(modData, folder),
+                    ServerSide = ServerSideMods.Contains(id)
                 });
             }
 
@@ -94,13 +97,19 @@ namespace ASM.Lib
 
         }
 
-        internal void SetServerSide(List<string> serverSideMods)
+        public void SaveServerSideMods(ASMConfig config)
         {
-            foreach (var mod in Mods)
+            foreach (var modKV in Mods)
             {
-                mod.Value.ServerSide = serverSideMods.Contains(mod.Key);
+                if(modKV.Value.ServerSide)
+                    ServerSideMods.Add(modKV.Key);
+                else
+                    ServerSideMods.Remove(modKV.Key);
             }
+            ServerSideMods = ServerSideMods.Distinct().ToList();
+            config.Save();
         }
+
 
         internal void Load()
         {
