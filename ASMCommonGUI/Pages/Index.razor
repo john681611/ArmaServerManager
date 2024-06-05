@@ -158,8 +158,7 @@
                         <option value=@mission>@mission.Replace(".pbo", "")</option>
                     }
                 </select>
-                <div @ref="fileDropContainer" class="file-drop-zone @HoverClass" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter">
-                    TODO: FIX INTERACTION
+                <div @ref="fileDropContainer" class="file-drop-zone">
                     <InputFile OnChange="@OnTemplateUpload" @ref="inputFile" class="file-input" />
                     <CheckBoxModList Server="ASM.Config.Servers[activeServer]" Config="ASM.Config" SelectedValues="selectedModIds">
                     </CheckBoxModList>
@@ -346,24 +345,19 @@
 
 
     //--------------------------------------------------------------
-       ElementReference fileDropContainer;
+    ElementReference fileDropContainer;
     InputFile inputFile;
 
     IJSObjectReference _filePasteFunctionReference;
 
-    private string HoverClass;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _filePasteFunctionReference = await JSRuntime.InvokeAsync<IJSObjectReference>("initializeFilePaste", fileDropContainer, inputFile.Element);
+            _filePasteFunctionReference = await JSRuntime.InvokeAsync<IJSObjectReference>("initializeFileDropZone", fileDropContainer, inputFile.Element);
         }
     }
-
-    void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
-
-    void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
 
     async Task OnTemplateUpload(InputFileChangeEventArgs e)
     {
@@ -390,7 +384,6 @@
             showSaveModal = true;
         }
 
-        HoverClass = string.Empty;
         StateHasChanged();
     }
 
