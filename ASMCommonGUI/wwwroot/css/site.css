@@ -215,7 +215,9 @@ h4 {
     }
 
 
-
+    /* .file-input {
+        visibility: hidden;
+    } */
     .checkbox-wrapper > input {
         display: none;
     }

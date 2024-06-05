@@ -1,7 +1,12 @@
 @page "/"
 @inherits LayoutComponentBase
 @using ASM.Lib
+@using System.IO
+@using System.Text
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@inject IJSRuntime JSRuntime;
+@implements IAsyncDisposable
 
 <div class="page darkMode">
     <div class="sidebar">
@@ -87,6 +92,23 @@
                             </div>
                         </div>
                     }
+                    else if (missingMods.Count > 0)
+                    {
+                        <div class="form-group flex-block save-modal">
+                            <h4>Install Mods?</h4>
+                            <p>
+                                @foreach (var mod in missingMods.OrderBy(x => x.Value))
+                                {
+                                    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=@mod.Key" target="_blank">@mod.Value</a><br/>
+                                }
+                            </p>
+                            <div class="flex-justify-spaced flex-margin-fix">
+                                <button class="btn btn-warning" @onclick='() => InstallMissingMods()' type="button">Yes</button>
+                                <button class="btn btn-warning" @onclick='() => ClearMissingMods()'
+                                    type="button">Cancel</button>
+                            </div>
+                        </div>
+                    }
                     else if (showDeleteModal)
                     {
                         <div class="form-group flex-block save-modal">
@@ -136,9 +158,12 @@
                         <option value=@mission>@mission.Replace(".pbo", "")</option>
                     }
                 </select>
-
-                <CheckBoxModList Server="ASM.Config.Servers[activeServer]" Config="ASM.Config" SelectedValues="selectedModIds">
-                </CheckBoxModList>
+                <div @ref="fileDropContainer" class="file-drop-zone @HoverClass" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter">
+                    TODO: FIX INTERACTION
+                    <InputFile OnChange="@OnTemplateUpload" @ref="inputFile" class="file-input" />
+                    <CheckBoxModList Server="ASM.Config.Servers[activeServer]" Config="ASM.Config" SelectedValues="selectedModIds">
+                    </CheckBoxModList>
+                </div>
             </div>
         </div>
         <div class="form-group flex-block">
@@ -193,6 +218,7 @@
     private string activeServer;
 
     private List<string> selectedModIds;
+    private Dictionary<string, string> missingMods;
 
     private string selectedMission;
 
@@ -233,6 +259,7 @@
         activeServer = ASM.Config.Servers.First().Key;
 
         selectedModIds = new List<string>();
+        missingMods = new Dictionary<string,string>();
 
     }
 
@@ -274,7 +301,7 @@
         }
 
         ASM.Config.Servers[activeServer].Templates[templateName] = template;
-
+        selectedTemplate = templateName;
         ASM.Config.Save();
         showSaveModal = false;
 
@@ -296,7 +323,6 @@
     {
 
         if (!ASM.Config.Servers[activeServer].Templates.ContainsKey(selectedTemplate))
-
         {
 
             templateName = "";
@@ -307,8 +333,6 @@
 
         }
 
-
-
         var template = ASM.Config.Servers[activeServer].Templates[selectedTemplate];
 
         templateName = selectedTemplate;
@@ -317,5 +341,81 @@
 
         StateHasChanged();
 
+    }
+
+
+
+    //--------------------------------------------------------------
+       ElementReference fileDropContainer;
+    InputFile inputFile;
+
+    IJSObjectReference _filePasteFunctionReference;
+
+    private string HoverClass;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _filePasteFunctionReference = await JSRuntime.InvokeAsync<IJSObjectReference>("initializeFilePaste", fileDropContainer, inputFile.Element);
+        }
+    }
+
+    void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
+
+    void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
+
+    async Task OnTemplateUpload(InputFileChangeEventArgs e)
+    {
+        missingMods.Clear();
+        using var stream = e.File.OpenReadStream();
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var stringData = Encoding.ASCII.GetString(ms.ToArray());
+        var (newTemplateName, mods) = HTMLTemplateParser.Parse(stringData);
+        var modIds = mods.Keys.ToList();
+        foreach (var modId in modIds)
+        {
+            if (!ASM.Config.Servers[activeServer].Mods.ContainsKey(modId))
+            {
+                missingMods.Add(modId, mods[modId]);
+            }
+        }
+
+        selectedModIds = modIds;
+        templateName = newTemplateName;
+
+        if(missingMods.Count == 0)
+        {
+            showSaveModal = true;
+        }
+
+        HoverClass = string.Empty;
+        StateHasChanged();
+    }
+
+    private void InstallMissingMods()
+    {
+        foreach (var mod in missingMods)
+        {
+            ASM.RunSteamModInstall(mod.Key, mod.Value, activeServer);
+        }
+        ClearMissingMods();
+    }
+
+    private void ClearMissingMods()
+    {
+        missingMods.Clear();
+        showSaveModal = false;
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_filePasteFunctionReference != null)
+        {
+            await _filePasteFunctionReference.InvokeVoidAsync("dispose");
+            await _filePasteFunctionReference.DisposeAsync();
+        }
     }
 }

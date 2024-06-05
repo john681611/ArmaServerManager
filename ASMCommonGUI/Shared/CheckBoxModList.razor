@@ -21,7 +21,7 @@
             <label class="checkboxList-item @((value.ServerSide? "serverSide" : ""))">
                 <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(key, eventArgs.Value); }"  />
                 <span>
-                    @value.Name
+                    @key @value.Name
                     <span class="description">
                         <button @onclick="eventArgs => { CheckboxContext(key); }">Toggle Server Side</button>
                         @value.Path</span>

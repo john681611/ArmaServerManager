@@ -140,9 +140,11 @@
 .save-modal {
     position: absolute;
     top: 40vh;
-    border: solid 1px #d6d5d5;
+    border: solid 1px #7c7c12;
     border-radius: 5px;
     padding: 20px;
+    background-color: #4f500c;
+
 }
 
 .save-modal .input-group {
@@ -166,5 +168,11 @@
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+.hover {
+    border: 5px dashed #fff;
+    filter: grayscale(1) brightness(30%);
+    border-radius: 5px;
 }
 
