@@ -39,7 +39,7 @@ namespace ASM.Lib
             var config = server.ConfigPath;
             if (!string.IsNullOrEmpty(mission))
                 config = SetupMissionConfig(mission, server.TemplateConfigPath);
-            lines.Add($"start {server.ServerPath}\\arma3server_x64.exe -mod={modsString} -serverMod={modsServerString} -config={config} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
+            lines.Add($"start {server.ServerPath}\\arma3server_x64.exe \"-mod={modsString}\" \"-serverMod={modsServerString}\" -config={config} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
             RunBat(lines, logStream);
         }
 
@@ -49,7 +49,7 @@ namespace ASM.Lib
             var lines = new List<string>();
             foreach (var modId in modIds)
             {
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" {modId} validate +quit");
+                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit");
                 AddMinifyLines(Config, server, ref lines, modId);
             }
             RunBat(lines, logStream);
@@ -58,7 +58,7 @@ namespace ASM.Lib
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
-                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" {modId} validate +quit",
+                $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit",
                 $"mklink /D \"{server.ServerPath}\\mods\\{folderName}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\""
             };
             AddMinifyLines(Config, server, ref lines, modId);
