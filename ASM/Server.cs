@@ -92,6 +92,9 @@ namespace ASM.Lib
                 },
 				{"spe", new Mod{
                     Name=" Spearhead"}
+                },
+                {"rf", new Mod{
+                    Name=" Reaction Forces"}
                 }
             };
             foreach (var key in cdlc.Keys)
