@@ -87,6 +87,9 @@ namespace ASM.Lib
                 {"contact", new Mod{
                     Name=" Contact"}
                 },
+				{"csla", new Mod{
+                    Name=" CSLA Iron Curtain"}
+                },
 				{"spe", new Mod{
                     Name=" Spearhead"}
                 }
