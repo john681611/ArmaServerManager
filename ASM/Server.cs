@@ -86,6 +86,9 @@ namespace ASM.Lib
                 },
                 {"contact", new Mod{
                     Name=" Contact"}
+                },
+				{"spe", new Mod{
+                    Name=" Spearhead"}
                 }
             };
             foreach (var key in cdlc.Keys)
