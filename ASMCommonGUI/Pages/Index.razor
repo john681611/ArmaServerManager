@@ -37,7 +37,7 @@
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-secondary form-control"
-                        @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer)'>Run Mods Update</button>
+                        @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer, DeleteBeforeUpdate)'>Run Mods Update</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-warning form-control"
@@ -57,6 +57,15 @@
                     </li>
 
                 }
+                 <li class="nav-item px-3">
+                        <label class="checkboxList-item">
+                            <input type="checkbox" checked=@DeleteBeforeUpdate
+                                @onchange="eventArgs => { DeleteBeforeUpdate = !DeleteBeforeUpdate; }" />
+                            <span>
+                                Delete old mod before update
+                            </span>
+                        </label>
+                    </li>
             </ul>
         </div>
         <div class="bottom-logo">
@@ -228,6 +237,8 @@
 
 
     private bool IgnoreOptionalKeys;
+
+    private bool DeleteBeforeUpdate;
 
 
     private bool showSaveModal = false;
