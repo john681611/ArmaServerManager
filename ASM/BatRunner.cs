@@ -43,12 +43,14 @@ namespace ASM.Lib
             RunBat(lines, logStream);
         }
 
-        public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, ASMConfig Config, List<string> logStream)
+        public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, bool deleteBeforeUpdate, ASMConfig Config, List<string> logStream)
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>();
             foreach (var modId in modIds)
             {
+                if (deleteBeforeUpdate)
+                    lines.Add($"rmdir /s /q \"{server.ServerPath}\\mods\\{modId}\"");
                 lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit");
                 AddMinifyLines(Config, server, ref lines, modId);
             }
