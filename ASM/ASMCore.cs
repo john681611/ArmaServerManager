@@ -28,7 +28,7 @@ namespace ASM.Lib
 {
     public sealed class ASMCore
     {
-        public const string VERSION = "1.0.2";
+        public const string VERSION = "1.1.0";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
         public List<string> logStream { get; set; } = new List<string>();
@@ -44,14 +44,17 @@ namespace ASM.Lib
         public void RunSteamModInstall(string modId, string folderName, string activeServerId) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, Config, logStream);
         public void RunSteamServerUpdate(string activeServerId) => BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
 
-        public static string FindFile(string fileName, string path = "")
+        public static string FindFile(string fileName, string path = "", int loop = 0, string originalPath = "")
         {
             if (string.IsNullOrEmpty(path))
                 path = AppDomain.CurrentDomain.BaseDirectory;
             path = Path.GetFullPath(path);
             var di = new DirectoryInfo(path);
             if (!di.GetFiles().Any(x => x.Name == fileName))
-                return FindFile(fileName, path + @"\..");
+                if (loop < 10)
+                    return FindFile(fileName, path + @"\..", loop + 1, originalPath == "" ? path : originalPath);
+                else
+                    throw new FileNotFoundException($"File {fileName} not found in {originalPath}");
             return di.GetFiles().First(x => x.Name == fileName).FullName;
         }
     }

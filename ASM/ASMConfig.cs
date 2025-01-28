@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -12,11 +13,12 @@ namespace ASM.Lib
         public string PBOMinify { get; set; }
 
         [JsonIgnore]
-        internal string filePath { get; set; }
+        public string filePath { get; set; }
 
         public static ASMConfig Load()
         {
-            var path = ASMCore.FindFile("ASMconfig.json");
+            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var path = ASMCore.FindFile("ASMconfig.json", appDataPath + @"\ASM");
             using var streamReader = new StreamReader(path);
             string json = streamReader.ReadToEnd();
             var config = JsonConvert.DeserializeObject<ASMConfig>(json);
