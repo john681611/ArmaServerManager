@@ -49,8 +49,9 @@ namespace ASM.Lib
             var lines = new List<string>();
             foreach (var modId in modIds)
             {
-                if (deleteBeforeUpdate)
-                    lines.Add($"rmdir /s /q \"{server.ServerPath}\\mods\\{modId}\"");
+                if (deleteBeforeUpdate) {
+                    lines.Add($"rmdir /s /q \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\"");
+                }
                 lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit");
                 AddMinifyLines(Config, server, ref lines, modId);
             }
