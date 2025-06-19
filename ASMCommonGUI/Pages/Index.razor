@@ -32,16 +32,16 @@
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-primary form-control"
-                        @onclick='() => ASM.RunServer(selectedModIds, activeServer, IgnoreOptionalKeys, selectedMission)'>Start
+                        @onclick='() => ASM.RunServer(selectedModIds, activeServer, IgnoreOptionalKeys, PauseOnFinish, selectedMission)'>Start
                         Server</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-secondary form-control"
-                        @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer, DeleteBeforeUpdate)'>Run Mods Update</button>
+                        @onclick='() => ASM.RunSteamModsUpdate(selectedModIds, activeServer, DeleteBeforeUpdate, PauseOnFinish)'>Run Mods Update</button>
                 </li>
                 <li class="nav-item px-3">
                     <button class="btn btn-warning form-control"
-                        @onclick='() => ASM.RunSteamServerUpdate(activeServer)'>Run Server Update</button>
+                        @onclick='() => ASM.RunSteamServerUpdate(activeServer, PauseOnFinish)'>Run Server Update</button>
                 </li>
                 @if (!string.IsNullOrEmpty(ASM.Config.Servers[activeServer].OptKeysPath))
 
@@ -63,6 +63,15 @@
                                 @onchange="eventArgs => { DeleteBeforeUpdate = !DeleteBeforeUpdate; }" />
                             <span>
                                 Delete old mod before update
+                            </span>
+                        </label>
+                    </li>
+                    <li class="nav-item px-3">
+                        <label class="checkboxList-item">
+                            <input type="checkbox" checked=@PauseOnFinish
+                                @onchange="eventArgs => { PauseOnFinish = !PauseOnFinish; }" />
+                            <span>
+                                Pause console when finished
                             </span>
                         </label>
                     </li>
@@ -180,7 +189,7 @@
                 <input class="form-control" @bind="newModSteamId" placeholder="Steam Id" required />
                 <div class="input-group-append">
                     <button class="btn btn-warning"
-                        @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer)'>Add New
+                        @onclick='() => ASM.RunSteamModInstall(newModSteamId, newFolderName, activeServer, PauseOnFinish)'>Add New
                         Mod</button>
                 </div>
             </div>
@@ -237,6 +246,7 @@
 
 
     private bool IgnoreOptionalKeys;
+    private bool PauseOnFinish;
 
     private bool DeleteBeforeUpdate;
 
@@ -400,10 +410,7 @@
 
     private void InstallMissingMods()
     {
-        foreach (var mod in missingMods)
-        {
-            ASM.RunSteamModInstall(mod.Key, mod.Value, activeServer);
-        }
+        ASM.RunSteamMultiModInstall(missingMods, activeServer, PauseOnFinish);
         ClearMissingMods();
     }
 

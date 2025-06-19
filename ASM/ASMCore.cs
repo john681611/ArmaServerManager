@@ -28,7 +28,7 @@ namespace ASM.Lib
 {
     public sealed class ASMCore
     {
-        public const string VERSION = "1.1.1";
+        public const string VERSION = "1.2.0";
         public const string REPO_URL = "https://github.com/john681611/ArmaServerLauncher";
         public ASMConfig Config { get; private set; }
         public List<string> logStream { get; set; } = new List<string>();
@@ -39,10 +39,11 @@ namespace ASM.Lib
             Config = ASMConfig.Load();
         }
 
-        public void RunServer(List<string> modIds, string activeServerId, bool ignoreOptionalKeys, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, ignoreOptionalKeys, mission);
-        public void RunSteamModsUpdate(List<string> modIds, string activeServerId, bool deleteBeforeUpdate) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, deleteBeforeUpdate, Config, logStream);
-        public void RunSteamModInstall(string modId, string folderName, string activeServerId) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, Config, logStream);
-        public void RunSteamServerUpdate(string activeServerId) => BatRunner.RunSteamServerUpdate(activeServerId, Config, logStream);
+        public void RunServer(List<string> modIds, string activeServerId, bool ignoreOptionalKeys, bool pauseOnFinish, string mission) => BatRunner.RunServer(modIds, activeServerId, Config, logStream, ignoreOptionalKeys, pauseOnFinish, mission);
+        public void RunSteamModsUpdate(List<string> modIds, string activeServerId, bool deleteBeforeUpdate, bool pauseOnFinish) => BatRunner.RunSteamModsUpdate(modIds, activeServerId, deleteBeforeUpdate, pauseOnFinish, Config, logStream);
+        public void RunSteamModInstall(string modId, string folderName, string activeServerId, bool pauseOnFinish) => BatRunner.RunSteamModInstall(modId, folderName, activeServerId, pauseOnFinish, Config, logStream);
+        public void RunSteamMultiModInstall(Dictionary<string, string> modMap, string activeServerId, bool pauseOnFinish) => BatRunner.RunSteamMultiModInstall(modMap, activeServerId, pauseOnFinish, Config, logStream);
+        public void RunSteamServerUpdate(string activeServerId, bool pauseOnFinish) => BatRunner.RunSteamServerUpdate(activeServerId, pauseOnFinish, Config, logStream);
 
         public static string FindFile(string fileName, string path = "", int loop = 0, string originalPath = "")
         {

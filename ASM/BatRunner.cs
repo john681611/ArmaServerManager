@@ -15,6 +15,7 @@ namespace ASM.Lib
             ASMConfig Config,
             List<string> logStream,
             bool ignoreOptionalKeys,
+            bool pauseOnFinish,
             string mission)
         {
             var server = Config.Servers[activeServerId];
@@ -40,24 +41,25 @@ namespace ASM.Lib
             if (!string.IsNullOrEmpty(mission))
                 config = SetupMissionConfig(mission, server.TemplateConfigPath);
             lines.Add($"start {server.ServerPath}\\arma3server_x64.exe \"-mod={modsString}\" \"-serverMod={modsServerString}\" -config={config} -bepath={server.BattleEyePath} -cfg={server.NetworkConfig} {server.ExtraArgs}");
-            RunBat(lines, logStream);
+            RunBat(lines, logStream, pauseOnFinish);
         }
 
-        public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, bool deleteBeforeUpdate, ASMConfig Config, List<string> logStream)
+        public static void RunSteamModsUpdate(List<string> modIds, string activeServerId, bool deleteBeforeUpdate, bool pauseOnFinish, ASMConfig Config, List<string> logStream)
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>();
             foreach (var modId in modIds)
             {
-                if (deleteBeforeUpdate) {
+                if (deleteBeforeUpdate)
+                {
                     lines.Add($"rmdir /s /q \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\"");
                 }
                 lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit");
                 AddMinifyLines(Config, server, ref lines, modId);
             }
-            RunBat(lines, logStream);
+            RunBat(lines, logStream, pauseOnFinish);
         }
-        public static void RunSteamModInstall(string modId, string folderName, string activeServerId, ASMConfig Config, List<string> logStream)
+        public static void RunSteamModInstall(string modId, string folderName, string activeServerId, bool pauseOnFinish, ASMConfig Config, List<string> logStream)
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
@@ -65,19 +67,33 @@ namespace ASM.Lib
                 $"mklink /D \"{server.ServerPath}\\mods\\{folderName}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\""
             };
             AddMinifyLines(Config, server, ref lines, modId);
-            RunBat(lines, logStream);
+            RunBat(lines, logStream, pauseOnFinish);
         }
 
-        public static void RunSteamServerUpdate(string activeServerId, ASMConfig Config, List<string> logStream)
+        public static void RunSteamMultiModInstall(Dictionary<string, string> modMap, string activeServerId, bool pauseOnFinish, ASMConfig Config, List<string> logStream)
+         {
+            var server = Config.Servers[activeServerId];
+            var lines = new List<string>();
+
+            foreach (var mod in modMap)
+            {
+                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{mod.Key}\" validate +quit");
+                lines.Add($"mklink /D \"{server.ServerPath}\\mods\\{mod.Value}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{mod.Key}\"");
+                AddMinifyLines(Config, server, ref lines, mod.Key);
+            }
+            RunBat(lines, logStream, pauseOnFinish);
+        }
+
+        public static void RunSteamServerUpdate(string activeServerId, bool pauseOnFinish, ASMConfig Config, List<string> logStream)
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>{
                 $"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\" +login {Config.SteamLogin}  +\"app_update {server.ServerBranch}\" validate +quit"
             };
-            RunBat(lines, logStream);
+            RunBat(lines, logStream, pauseOnFinish);
         }
 
-        private static async void RunBat(List<string> lines, List<string> logStream)
+        private static async void RunBat(List<string> lines, List<string> logStream, bool pauseOnFinish)
         {
             logStream.Add("------Running .bat script------");
             logStream.AddRange(lines);
@@ -89,6 +105,8 @@ namespace ASM.Lib
                 {
                     writer.WriteLine(line);
                 }
+                if (pauseOnFinish)
+                    writer.WriteLine("pause");
                 writer.WriteLine("exit");
             }
             Process process = new Process();
@@ -132,6 +150,6 @@ namespace ASM.Lib
                     del /s /q "{Config.PBOMinify}\Addons\*.*"
                 """);
             }
-        } 
+        }
     }
 }
