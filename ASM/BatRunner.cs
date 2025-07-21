@@ -48,13 +48,18 @@ namespace ASM.Lib
         {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>();
+            var workshopString = "";
             foreach (var modId in modIds)
             {
                 if (deleteBeforeUpdate)
                 {
                     lines.Add($"rmdir /s /q \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{modId}\"");
                 }
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate +quit");
+                workshopString += $"+\"workshop_download_item {server.ClientBranch}\" \"{modId}\" validate ";
+            }
+            lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} {workshopString} +quit");
+            foreach (var modId in modIds)
+            {
                 AddMinifyLines(Config, server, ref lines, modId);
             }
             RunBat(lines, logStream, pauseOnFinish);
@@ -71,13 +76,17 @@ namespace ASM.Lib
         }
 
         public static void RunSteamMultiModInstall(Dictionary<string, string> modMap, string activeServerId, bool pauseOnFinish, ASMConfig Config, List<string> logStream)
-         {
+        {
             var server = Config.Servers[activeServerId];
             var lines = new List<string>();
-
+            var workshopString = "";
             foreach (var mod in modMap)
             {
-                lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} +\"workshop_download_item {server.ClientBranch}\" \"{mod.Key}\" validate +quit");
+                workshopString += $"+\"workshop_download_item {server.ClientBranch}\" \"{mod.Key}\" validate ";
+            }
+            lines.Add($"{Config.SteamPath}\\steamcmd.exe \"+force_install_dir {server.ServerPath}\\mods\" +login {Config.SteamLogin} {workshopString} +quit");
+            foreach (var mod in modMap)
+            {
                 lines.Add($"mklink /D \"{server.ServerPath}\\mods\\{mod.Value}\" \"{server.ServerPath}\\Mods\\steamapps\\workshop\\content\\107410\\{mod.Key}\"");
                 AddMinifyLines(Config, server, ref lines, mod.Key);
             }
@@ -145,9 +154,10 @@ namespace ASM.Lib
             if (!string.IsNullOrEmpty(Config.PBOMinify))
             {
                 lines.Add($"""
-                    {Config.PBOMinify}\pbo_minify.exe "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons" "{Config.PBOMinify}\Addons"
-                    copy /Y "{Config.PBOMinify}\Addons\*.*" "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons"
-                    del /s /q "{Config.PBOMinify}\Addons\*.*"
+                    mkdir "{Config.PBOMinify}\Addons\{modId}"
+                    {Config.PBOMinify}\pbo_minify.exe "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons" "{Config.PBOMinify}\Addons\{modId}"
+                    copy /Y "{Config.PBOMinify}\Addons\{modId}\*.*" "{server.ServerPath}\Mods\steamapps\workshop\content\107410\{modId}\Addons"
+                    del /s /q "{Config.PBOMinify}\Addons\{modId}"
                 """);
             }
         }
