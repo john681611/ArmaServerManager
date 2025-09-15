@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.8" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.9" />
     <Content Include="Resources\**" LinkBase="Resources" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\ASMconfig.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\ASMTemplates.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
