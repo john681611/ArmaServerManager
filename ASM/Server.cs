@@ -87,14 +87,17 @@ namespace ASM.Lib
                 {"contact", new Mod{
                     Name=" Contact"}
                 },
-				{"csla", new Mod{
+                {"csla", new Mod{
                     Name=" CSLA Iron Curtain"}
                 },
-				{"spe", new Mod{
+                {"spe", new Mod{
                     Name=" Spearhead"}
                 },
                 {"rf", new Mod{
                     Name=" Reaction Forces"}
+                },
+                {"ef", new Mod{
+                    Name=" Expeditionary Forces"}
                 }
             };
             foreach (var key in cdlc.Keys)
@@ -110,7 +113,7 @@ namespace ASM.Lib
         {
             foreach (var modKV in Mods)
             {
-                if(modKV.Value.ServerSide)
+                if (modKV.Value.ServerSide)
                     ServerSideMods.Add(modKV.Key);
                 else
                     ServerSideMods.Remove(modKV.Key);
