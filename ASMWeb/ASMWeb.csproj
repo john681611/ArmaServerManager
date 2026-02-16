@@ -19,7 +19,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.2" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.3" />
     <Content Include="..\config.json" LinkBase="" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
